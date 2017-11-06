@@ -33,7 +33,6 @@ class MainApplication(tk.Frame):
         self.main.pack(side="right", fill="both", expand=True)
 
         # Insert
-        # user = User(code="123", firstName="fd", mi="f", lastName="asd")
         user3 = User(code="13", firstName="fkd", mi="fl", lastName="asld")
         selectUser = User.selectBy(code="123")
         print(selectUser)
