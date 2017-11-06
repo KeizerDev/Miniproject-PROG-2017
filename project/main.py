@@ -1,5 +1,7 @@
 import tkinter as tk
 
+from thuisbioscoop.db.user import User
+
 class Navbar(tk.Frame):
     pass
 
@@ -19,6 +21,7 @@ class Main(tk.Frame):
 class MainApplication(tk.Frame):
     def __init__(self, parent, *args, **kwargs):
         tk.Frame.__init__(self, parent, *args, **kwargs)
+
         self.statusbar = Statusbar(self)
         self.toolbar = Toolbar(self)
         self.navbar = Navbar(self)
@@ -29,6 +32,11 @@ class MainApplication(tk.Frame):
         self.navbar.pack(side="left", fill="y")
         self.main.pack(side="right", fill="both", expand=True)
 
+        # Insert
+        # user = User(code="123", firstName="fd", mi="f", lastName="asd")
+        user3 = User(code="13", firstName="fkd", mi="fl", lastName="asld")
+        selectUser = User.selectBy(code="123")
+        print(selectUser)
 
 if __name__ == "__main__":
     root = tk.Tk()
