@@ -9,7 +9,7 @@ class User(sqlobject.SQLObject):
     firstName = sqlobject.StringCol()
     mi = sqlobject.StringCol(length=1, default=None)
     lastName = sqlobject.StringCol()
-    date = sqlobject.DateTimeCol(default=None)
+    date = sqlobject.DateTimeCol()
 
 
 User.createTable(ifNotExists=True)
