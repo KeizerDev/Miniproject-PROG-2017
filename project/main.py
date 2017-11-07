@@ -22,21 +22,21 @@ class ScreenIntro:
 
     def show_screen_supplier(self):
         self.frame_start.pack_forget()
-        ScreenSupplier(self.master)
+        ScreenStartSupplier(self.master)
 
     def show_screen_visitor(self):
         self.frame_start.pack_forget()
-        ScreenVisitor(self.master)
+        ScreenStartVisitor(self.master)
 
     def show_screen_public(self):
         self.frame_start.pack_forget()
         ScreenPublic(self.master)
 
 
-class ScreenSupplier:
+class ScreenStartSupplier():
     def __init__(self, master):
         self.master = master
-        self.frame_supplier = tk.Frame(self.master, background="blue")
+        self.frame_supplier = tk.Frame(self.master, background="#AA0203")
         self.frame_supplier.pack(fill="both", expand=True)
 
         self.username = tk.Entry(self.frame_supplier)
@@ -57,10 +57,11 @@ class ScreenSupplier:
         self.frame_supplier.pack_forget()
         ScreenIntro(self.master)
 
-class ScreenVisitor:
+
+class ScreenStartVisitor():
     def __init__(self, master):
         self.master = master
-        self.frame_visitor = tk.Frame(self.master, background="green")
+        self.frame_visitor = tk.Frame(self.master, background="#AA0203")
         self.frame_visitor.pack(fill="both", expand=True)
 
         self.username = tk.Entry(master)
@@ -84,7 +85,7 @@ class ScreenVisitor:
 class ScreenPublic:
     def __init__(self, master):
         self.master = master
-        self.frame_public = tk.Frame(self.master, background="black")
+        self.frame_public = tk.Frame(self.master, background="#AA0203")
         self.frame_public.pack(fill="both", expand=True)
 
         self.submit = tk.Button(master, text="Aanmelden")
@@ -116,4 +117,3 @@ if __name__ == "__main__":
 
     MainApplication(root).pack(side="top", fill="both", expand=True)
     root.mainloop()
-
