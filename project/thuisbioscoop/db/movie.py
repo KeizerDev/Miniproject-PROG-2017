@@ -21,9 +21,6 @@ class Movie(sqlobject.SQLObject):
     imdb_id = sqlobject.StringCol(unique=True)
     imdb_rating = sqlobject.FloatCol()
     imdb_votes = sqlobject.IntCol()
-    ft_starttime = sqlobject.StringCol()
-    ft_endtime = sqlobject.StringCol()
-    ft_channel = sqlobject.StringCol()
     ft_movietip = sqlobject.StringCol()
 
 
