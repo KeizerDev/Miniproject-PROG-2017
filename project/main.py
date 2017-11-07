@@ -1,53 +1,109 @@
 import tkinter as tk
 
-class start():
+
+class ScreenIntro():
     def __init__(self, master):
-        frame_start = tk.Frame(master, background="#AA0203")
+        self.master = master
+        self.frame_start = tk.Frame(master, background="#AA0203")
+        self.welkom = tk.Label(self.frame_start, text="Welkom, maak uw keuze:", foreground="white",
+                               background="#AA0203", height=5, font=10)
+        self.button1 = tk.Button(self.frame_start, text="Ik ben aanbieder", height=3, width=25,
+                                 command=self.show_screen_supplier)
+        self.button2 = tk.Button(self.frame_start, text="Ik ben bezoeker", height=3, width=25,
+                                 command=self.show_screen_visitor)
+        self.button3 = tk.Button(self.frame_start, text="Ik wil publieke informatie zien", height=3, width=25,
+                                 command=self.show_screen_public)
 
-        def show_supplier():
-            frame_start.pack_forget()
-            frame_supplier = tk.Frame(master, background="blue")
-            frame_supplier.pack(fill="both",expand=True)
+        self.frame_start.pack(fill="both", expand=True)
+        self.welkom.pack()
+        self.button1.pack()
+        self.button2.pack()
+        self.button3.pack()
 
-        def go_to_supplier():
-            show_supplier()
+    def show_screen_supplier(self):
+        self.frame_start.pack_forget()
+        ScreenSupplier(self.master)
 
-        def show_visitor():
-            frame_start.pack_forget()
-            frame_visitor = tk.Frame(master, background="green")
-            frame_visitor.pack(fill="both",expand=True)
+    def show_screen_visitor(self):
+        self.frame_start.pack_forget()
+        ScreenVisitor(self.master)
 
-        def go_to_visitor():
-            show_visitor()
+    def show_screen_public(self):
+        self.frame_start.pack_forget()
+        ScreenPublic(self.master)
 
-        def show_public():
-            frame_start.pack_forget()
-            frame_public = tk.Frame(master, background="black")
-            frame_public.pack(fill="both",expand=True)
 
-        def go_to_public():
-            show_public()
+class ScreenSupplier():
+    def __init__(self, master):
+        self.master = master
+        self.frame_supplier = tk.Frame(self.master, background="blue")
+        self.frame_supplier.pack(fill="both", expand=True)
 
-        welkom = tk.Label(frame_start, text="Welkom, maak uw keuze:", foreground="white", background="#AA0203", height=5, font=10)
-        button1 = tk.Button(frame_start, text="Ik ben aanbieder", height=3, width=25, command=go_to_supplier)
-        button2 = tk.Button(frame_start, text="Ik ben bezoeker", height=3, width=25, command=go_to_visitor)
-        button3 = tk.Button(frame_start, text="Ik wil publieke informatie zien", height=3, width=25, command=go_to_public)
+        self.username = tk.Entry(master)
+        self.username.insert(0, "username")
+        self.username.pack()
 
-        frame_start.pack(fill="both", expand=True)
-        welkom.pack()
-        button1.pack()
-        button2.pack()
-        button3.pack()
+        self.password = tk.Entry(master)
+        self.password.insert(0, "wachtwoord")
+        self.password.pack()
+
+        self.submit = tk.Button(master, text="Login")
+        self.submit.pack()
+
+        self.back = tk.Button(master, text="Terug")
+        self.back.pack()
+
+    def show_screen_intro():
+        self.frame_supplier.pack_forget()
+        ScreenIntro(self.master)
+
+class ScreenVisitor():
+    def __init__(self, master):
+        self.master = master
+        self.frame_visitor = tk.Frame(self.master, background="green")
+        self.frame_visitor.pack(fill="both", expand=True)
+
+        self.username = tk.Entry(master)
+        self.username.insert(0, "username")
+        self.username.pack()
+
+        self.email = tk.Entry(master)
+        self.email.insert(0, "email")
+        self.email.pack()
+
+        self.suppliedMovies = tk.Button(master, text="Films die worden aangeboden door aanbieders")
+        self.suppliedMovies.pack()
+
+        self.numberOfVisitors = tk.Button(master, text="Aantal bezoekers per film")
+        self.numberOfVisitors.pack()
+
+        self.back = tk.Button(master, text="Terug")
+        self.back.pack()
+
+
+class ScreenPublic():
+    def __init__(self, master):
+        self.master = master
+        self.frame_public = tk.Frame(self.master, background="black")
+        self.frame_public.pack(fill="both", expand=True)
+
+        self.submit = tk.Button(master, text="Aanmelden")
+        self.submit.pack()
+
+        self.back = tk.Button(master, text="Terug")
+        self.back.pack()
+
 
 class MainApplication(tk.Frame):
     def __init__(self, parent, *args, **kwargs):
         tk.Frame.__init__(self, parent, *args, **kwargs)
-        self.start = start(self)
+        self.screen_intro = ScreenIntro(self)
 
         # Insert
-        #user3 = User(code="13", firstName="fkd", mi="fl", lastName="asld")
-        #selectUser = User.selectBy(code="123")
-        #print(selectUser)
+        # user3 = User(code="13", firstName="fkd", mi="fl", lastName="asld")
+        # selectUser = User.selectBy(code="123")
+        # print(selectUser)
+
 
 if __name__ == "__main__":
     root = tk.Tk()
@@ -55,3 +111,4 @@ if __name__ == "__main__":
 
     MainApplication(root).pack(side="top", fill="both", expand=True)
     root.mainloop()
+
