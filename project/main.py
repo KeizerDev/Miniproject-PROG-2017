@@ -46,7 +46,7 @@ class ScreenStartSupplier():
         self.suppliedMovies = tk.Button(self.frame_supplier, text="Films die u aanbiedt", height=3, width=35, command=self.show_screen_overview_supplier)
         self.suppliedMovies.pack()
 
-        self.codes_of_visitors = tk.Button(self.frame_supplier, text="Bezoekers die een kaartje hebben gekocht", height=3, width=35)
+        self.codes_of_visitors = tk.Button(self.frame_supplier, text="Bezoekers die een kaartje hebben gekocht", height=3, width=35, command=self.show_screen_overview_visitors_supplier)
         self.codes_of_visitors.pack()
 
         self.back = tk.Button(self.frame_supplier, text="Terug", command=self.show_screen_intro, height=3, width=25)
@@ -60,11 +60,21 @@ class ScreenStartSupplier():
         self.frame_supplier.pack_forget()
         ScreenOverviewMoviesSupplier(self.master)
 
+    def show_screen_overview_visitors_supplier(self):
+        self.frame_supplier.pack_forget()
+        ScreenOverviewVisitorsSupplier(self.master)
+
 class ScreenOverviewMoviesSupplier():
     def __init__(self, master):
         self.master = master
         self.frame_overview_supplier = tk.Frame(self.master, background="#AA0203")
         self.frame_overview_supplier.pack(fill="both", expand=True)
+
+class ScreenOverviewVisitorsSupplier():
+    def __init__(self, master):
+        self.master = master
+        self.frame_overview_visitors = tk.Frame(self.master, background="#AA0203")
+        self.frame_overview_visitors.pack(fill="both", expand=True)
 
 
 class ScreenStartVisitor():
