@@ -19,11 +19,10 @@ response_xml = urllib.request.urlopen(url).read()
 response_dict = xmltodict.parse(response_xml)
 
 
-def download_img(url):
-    response = urllib.request.urlopen(url).read()
-
-    if not os.path.isfile("data/images/"+movie["imdb_id"]+'.jpg'):
-        newImg = open("data/images/"+movie["imdb_id"]+'.jpg', 'wb')
+def download_img(url, imdb_id):
+    if not os.path.isfile("data/images/"+imdb_id+'.jpg'):
+        response = urllib.request.urlopen(url).read()
+        newImg = open("data/images/"+imdb_id+'.jpg', 'wb')
         newImg.write(response)
         newImg.close()
 
@@ -63,4 +62,4 @@ for movie in response_dict['filmsoptv']['film']:
                                            ft_endtime=movie["eindtijd"],
                                            ft_channel=movie["zender"])
 
-    download_img(movie['cover'])
+    download_img(movie['cover'], movie['imdb_id'])
