@@ -72,11 +72,46 @@ class ScreenOverviewMoviesSupplier():
         self.frame_overview_supplier = tk.Frame(self.master, background="#AA0203")
         self.frame_overview_supplier.pack(fill="both", expand=True)
 
+        self.confirmation=tk.Button(self.frame_overview_supplier, text="Bevestig keuze", command=self.show_confirmation, height=3, width=25)
+        self.confirmation.pack(side=tk.BOTTOM)
+
+        self.back = tk.Button(self.frame_overview_supplier, text="Terug", command=self.show_screen_intro, height=3, width=25)
+        self.back.pack(side=tk.BOTTOM)
+
+    def show_screen_intro(self):
+        self.frame_overview_supplier.pack_forget()
+        ScreenIntro(self.master)
+
+    def show_confirmation(self):
+        self.frame_overview_supplier.pack_forget()
+        ScreenConfirmationSupplier(self.master)
+
+
 class ScreenOverviewVisitorsSupplier():
     def __init__(self, master):
         self.master = master
         self.frame_overview_visitors = tk.Frame(self.master, background="#AA0203")
         self.frame_overview_visitors.pack(fill="both", expand=True)
+
+        self.back = tk.Button(self.frame_overview_visitors, text="Terug", command=self.show_screen_intro, height=3, width=25)
+        self.back.pack(side=tk.BOTTOM)
+
+    def show_screen_intro(self):
+        self.frame_overview_visitors.pack_forget()
+        ScreenIntro(self.master)
+
+class ScreenConfirmationSupplier():
+    def __init__(self, master):
+        self.master = master
+        self.frame_confirmation = tk.Frame(self.master, background="#AA0203")
+        self.frame_confirmation.pack(fill="both", expand=True)
+
+        self.back = tk.Button(self.frame_confirmation, text="Terug", command=self.show_screen_intro, height=3, width=25)
+        self.back.pack(side=tk.BOTTOM)
+
+    def show_screen_intro(self):
+        self.frame_confirmation.pack_forget()
+        ScreenIntro(self.master)
 
 class ScreenStartVisitor():
     def __init__(self, master):
