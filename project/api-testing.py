@@ -5,9 +5,11 @@ import xmltodict
 from thuisbioscoop.db.movie import Movie
 from thuisbioscoop.helpers import ft_url_builder
 
+import datetime
+
 key = "b2yak0qh1og2kt7v3dc7cb5mah27iurf"
 
-url = ft_url_builder(key, "08-11-2017")
+url = ft_url_builder(key, f"{datetime.datetime.now():%d-%m-%Y}")
 response_xml = urllib.request.urlopen(url).read()
 response_dict = xmltodict.parse(response_xml)
 
@@ -35,3 +37,5 @@ for movie in response_dict['filmsoptv']['film']:
                           ft_endtime=movie["eindtijd"],
                           ft_channel=movie["zender"],
                           ft_movietip=movie["filmtip"])
+    else:
+    	print("%s is already in the database" % movie["titel"])
