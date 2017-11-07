@@ -39,21 +39,21 @@ class ScreenSupplier:
         self.frame_supplier = tk.Frame(self.master, background="blue")
         self.frame_supplier.pack(fill="both", expand=True)
 
-        self.username = tk.Entry(master)
+        self.username = tk.Entry(self.frame_supplier)
         self.username.insert(0, "username")
         self.username.pack()
 
-        self.password = tk.Entry(master)
+        self.password = tk.Entry(self.frame_supplier)
         self.password.insert(0, "wachtwoord")
         self.password.pack()
 
-        self.submit = tk.Button(master, text="Login")
+        self.submit = tk.Button(self.frame_supplier, text="Login")
         self.submit.pack()
 
-        self.back = tk.Button(master, text="Terug")
+        self.back = tk.Button(self.frame_supplier, text="Terug", command=self.show_screen_intro)
         self.back.pack()
 
-    def show_screen_intro():
+    def show_screen_intro(self):
         self.frame_supplier.pack_forget()
         ScreenIntro(self.master)
 
@@ -96,7 +96,7 @@ class ScreenPublic:
 
 class ScreenOverview:
     def __init__(self, master):
-        
+        pass
 
 
 class MainApplication(tk.Frame):
