@@ -1,38 +1,37 @@
-from thuisbioscoop.db.film import Film
 import urllib.request
-
-key = "b2yak0qh1og2kt7v3dc7cb5mah27iurf"
-baseUrl = "http://api.filmtotaal.nl/filmsoptv.xml?apikey=" + key
-
-fullUrl = baseUrl + "&dag=07-11-2017&sorteer=0"
-
-response = urllib.request.urlopen(fullUrl).read()
 
 import xmltodict
 
-doc = xmltodict.parse(response)
+from thuisbioscoop.db.movie import Movie
+from thuisbioscoop.helpers import ft_url_builder
 
-for film in doc['filmsoptv']['film']:
-    storedFilm = Film.select(Film.q.imdb_id == film["imdb_id"]).count()
+key = "b2yak0qh1og2kt7v3dc7cb5mah27iurf"
 
-    if not storedFilm:
-        newFilm = Film(ft_link=film["ft_link"],
-                       title=film["titel"],
-                       year=film["jaar"],
-                       director=film["regisseur"],
-                       cast=film["cast"],
-                       genre=film["genre"],
-                       country=film["land"],
-                       cover_img=film["cover"],
-                       tagline=film["tagline"],
-                       length=int(film["duur"]),
-                       synopsis=film["synopsis"],
-                       ft_rating=float(film["ft_rating"]),
-                       ft_votes=int(film["ft_votes"]),
-                       imdb_id=film["imdb_id"],
-                       imdb_rating=float(film["imdb_rating"]),
-                       imdb_votes=int(film["imdb_votes"]),
-                       starttime=film["starttijd"],
-                       endtime=film["eindtijd"],
-                       channel=film["zender"],
-                       movietip=film["filmtip"])
+url = ft_url_builder(key, "08-11-2017")
+response_xml = urllib.request.urlopen(url).read()
+response_dict = xmltodict.parse(response_xml)
+
+for movie in response_dict['filmsoptv']['film']:
+    store_movie = Movie.select(Movie.q.imdb_id == movie["imdb_id"]).count()
+
+    if not store_movie:
+        new_movie = Movie(ft_link=movie["ft_link"],
+                          ft_title=movie["titel"],
+                          ft_year=movie["jaar"],
+                          ft_director=movie["regisseur"],
+                          ft_cast=movie["cast"],
+                          ft_genre=movie["genre"],
+                          ft_country=movie["land"],
+                          ft_cover_img=movie["cover"],
+                          ft_tagline=movie["tagline"],
+                          ft_length=int(movie["duur"]),
+                          ft_synopsis=movie["synopsis"],
+                          ft_rating=float(movie["ft_rating"]),
+                          ft_votes=int(movie["ft_votes"]),
+                          imdb_id=movie["imdb_id"],
+                          imdb_rating=float(movie["imdb_rating"]),
+                          imdb_votes=int(movie["imdb_votes"]),
+                          ft_starttime=movie["starttijd"],
+                          ft_endtime=movie["eindtijd"],
+                          ft_channel=movie["zender"],
+                          ft_movietip=movie["filmtip"])
