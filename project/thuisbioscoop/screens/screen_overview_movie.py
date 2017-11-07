@@ -1,5 +1,6 @@
 import tkinter as tk
 
+from thuisbioscoop.screens.screen_confirmation_supplier import ScreenConfirmationSupplier
 from thuisbioscoop.screens.screen_intro import ScreenIntro
 from thuisbioscoop.ui.back_button import BackButton
 

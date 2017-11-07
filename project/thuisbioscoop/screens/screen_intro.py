@@ -1,5 +1,9 @@
 import tkinter as tk
 
+from thuisbioscoop.screens.screen_public import ScreenPublic
+from thuisbioscoop.screens.screen_start_supplier import ScreenStartSupplier
+from thuisbioscoop.screens.screen_start_visitor import ScreenStartVisitor
+
 
 class ScreenIntro:
     def __init__(self, master):

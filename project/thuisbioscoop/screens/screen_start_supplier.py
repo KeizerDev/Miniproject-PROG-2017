@@ -1,6 +1,8 @@
 import tkinter as tk
 
 from thuisbioscoop.screens.screen_intro import ScreenIntro
+from thuisbioscoop.screens.screen_overview_movie import ScreenOverviewMovie
+from thuisbioscoop.screens.screen_overview_visitors import ScreenOverviewVisitors
 from thuisbioscoop.ui.back_button import BackButton
 
 
