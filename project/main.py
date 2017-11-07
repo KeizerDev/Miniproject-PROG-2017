@@ -1,5 +1,7 @@
 import tkinter as tk
 
+from thuisbioscoop.ui.back_button import BackButton
+
 
 class ScreenIntro:
     def __init__(self, master):
@@ -51,7 +53,7 @@ class ScreenStartSupplier():
                                            height=3, width=35, command=self.show_screen_overview_visitors)
         self.codes_of_visitors.pack()
 
-        self.back = tk.Button(self.frame_supplier, text="Terug", command=self.show_screen_intro, height=3, width=25)
+        self.back = BackButton(self.frame_supplier, command=self.show_screen_intro)
         self.back.pack(side=tk.BOTTOM)
 
     def show_screen_intro(self):
@@ -70,15 +72,28 @@ class ScreenStartSupplier():
 class ScreenOverviewVisitors():
     def __init__(self, master):
         self.master = master
-        self.frame_overview_supplier = tk.Frame(self.master, background="#AA0203")
-        self.frame_overview_supplier.pack(fill="both", expand=True)
+        self.frame_overview_visitors = tk.Frame(self.master, background="#AA0203")
+        self.frame_overview_visitors.pack(fill="both", expand=True)
 
-        self.back = tk.Button(self.frame_overview_supplier, text="Terug", command=self.show_screen_intro, height=3, width=25)
+        self.confirmation = tk.Button(self.frame_overview_visitors, text="Bevestig keuze",
+                                      command=self.show_confirmation, height=3, width=25)
+        self.confirmation.pack(side=tk.BOTTOM)
+
+        self.back = BackButton(self.frame_overview_visitors, command=self.show_screen_intro)
+        self.information = tk.Label(self.frame_overview_visitors, text="Hieronder ziet u de tickets die verkocht zijn:",
+                                    foreground="white",
+                                    background="#AA0203", height=5, font=10)
+        self.information.pack()
+
+        self.back = BackButton(self.frame_overview_visitors, command=self.show_screen_intro)
         self.back.pack(side=tk.BOTTOM)
 
     def show_screen_intro(self):
-        self.frame_overview_supplier.pack_forget()
+        self.frame_overview_visitors.pack_forget()
         ScreenIntro(self.master)
+
+    def show_confirmation(self):
+        self.frame_overview_visitors.pack_forget()
 
 
 class ScreenOverviewMovie:
@@ -87,12 +102,18 @@ class ScreenOverviewMovie:
         self.frame_overview_movie = tk.Frame(self.master, background="#AA0203")
         self.frame_overview_movie.pack(fill="both", expand=True)
 
+        self.back = BackButton(self.frame_overview_movie, command=self.show_screen_intro)
+        self.information = tk.Label(self.frame_overview_movie, text="Hieronder ziet u de films die u kunt aanbieden:",
+                                    foreground="white",
+                                    background="#AA0203", height=5, font=10)
+        self.information.pack()
+
         self.confirmation = tk.Button(self.frame_overview_movie, text="Bevestig keuze",
                                       command=self.show_confirmation, height=3, width=25)
         self.confirmation.pack(side=tk.BOTTOM)
 
-        self.back = tk.Button(self.frame_overview_movie, text="Terug", command=self.show_screen_intro, height=3,
-                              width=25)
+        self.back = BackButton(self.frame_overview_movie, command=self.show_screen_intro)
+
         self.back.pack(side=tk.BOTTOM)
 
     def show_screen_intro(self):
@@ -103,18 +124,20 @@ class ScreenOverviewMovie:
         self.frame_overview_movie.pack_forget()
         ScreenConfirmationSupplier(self.master)
 
+
 class ScreenConfirmationSupplier():
     def __init__(self, master):
         self.master = master
         self.frame_confirmation = tk.Frame(self.master, background="#AA0203")
         self.frame_confirmation.pack(fill="both", expand=True)
 
-        self.back = tk.Button(self.frame_confirmation, text="Terug", command=self.show_screen_intro, height=3, width=25)
+        self.back = BackButton(self.frame_confirmation, command=self.show_screen_intro)
         self.back.pack(side=tk.BOTTOM)
 
     def show_screen_intro(self):
         self.frame_confirmation.pack_forget()
         ScreenIntro(self.master)
+
 
 class ScreenStartVisitor():
     def __init__(self, master):
@@ -130,7 +153,7 @@ class ScreenStartVisitor():
         self.email.insert(0, "email")
         self.email.pack()
 
-        self.back = tk.Button(self.frame_visitor, text="Terug", height=3, width=25, command=self.show_screen_intro)
+        self.back = BackButton(self.frame_visitor, command=self.show_screen_intro)
         self.back.pack(side=tk.BOTTOM)
 
     def show_screen_intro(self):
@@ -149,12 +172,20 @@ class ScreenPublic:
                                          background="#AA0203", height=5, font=10)
         self.label_informatie.pack()
 
-        self.back = tk.Button(self.frame_public, text="Terug", height=3, width=25, command=self.show_screen_intro)
+        self.back = BackButton(self.frame_public, command=self.show_screen_intro)
         self.back.pack(side=tk.BOTTOM)
 
     def show_screen_intro(self):
         self.frame_public.pack_forget()
         ScreenIntro(self.master)
+
+
+class ScreenOverviewMovie:
+    def __init__(self, master):
+        self.entry = tk.Entry(master)
+        self.entry.grid(row=2, column=3)
+        # button2.grid(row=2, column=3)
+
 
 class MainApplication(tk.Frame):
     def __init__(self, parent, *args, **kwargs):
