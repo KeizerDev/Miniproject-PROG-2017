@@ -14,4 +14,3 @@ def text_to_md5(my_string):
 def generate_unique_code(str):
     return text_to_md5(str)[0:7]
 
-print(generate_unique_code("reoas"))

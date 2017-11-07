@@ -40,13 +40,15 @@ class ScreenStartSupplier():
         self.frame_supplier.pack(fill="both", expand=True)
 
         self.label_keuze = tk.Label(self.frame_supplier, text="Maak uw keuze:", foreground="white",
-                                      background="#AA0203", height=5, font=10)
+                                    background="#AA0203", height=5, font=10)
         self.label_keuze.pack()
 
-        self.suppliedMovies = tk.Button(self.frame_supplier, text="Films die u aanbiedt", height=3, width=35, command=self.show_screen_overview_supplier)
+        self.suppliedMovies = tk.Button(self.frame_supplier, text="Films die u aanbiedt", height=3, width=35,
+                                        command=self.show_screen_overview_supplier)
         self.suppliedMovies.pack()
 
-        self.codes_of_visitors = tk.Button(self.frame_supplier, text="Bezoekers die een kaartje hebben gekocht", height=3, width=35, command=self.show_screen_overview_visitors_supplier)
+        self.codes_of_visitors = tk.Button(self.frame_supplier, text="Bezoekers die een kaartje hebben gekocht",
+                                           height=3, width=35)
         self.codes_of_visitors.pack()
 
         self.back = tk.Button(self.frame_supplier, text="Terug", command=self.show_screen_intro, height=3, width=25)
@@ -60,21 +62,12 @@ class ScreenStartSupplier():
         self.frame_supplier.pack_forget()
         ScreenOverviewMoviesSupplier(self.master)
 
-    def show_screen_overview_visitors_supplier(self):
-        self.frame_supplier.pack_forget()
-        ScreenOverviewVisitorsSupplier(self.master)
 
 class ScreenOverviewMoviesSupplier():
     def __init__(self, master):
         self.master = master
         self.frame_overview_supplier = tk.Frame(self.master, background="#AA0203")
         self.frame_overview_supplier.pack(fill="both", expand=True)
-
-class ScreenOverviewVisitorsSupplier():
-    def __init__(self, master):
-        self.master = master
-        self.frame_overview_visitors = tk.Frame(self.master, background="#AA0203")
-        self.frame_overview_visitors.pack(fill="both", expand=True)
 
 
 class ScreenStartVisitor():
@@ -98,14 +91,16 @@ class ScreenStartVisitor():
         self.frame_visitor.pack_forget()
         ScreenIntro(self.master)
 
+
 class ScreenPublic:
     def __init__(self, master):
         self.master = master
         self.frame_public = tk.Frame(self.master, background="#AA0203")
         self.frame_public.pack(fill="both", expand=True)
 
-        self.label_informatie = tk.Label(self.frame_public, text="Hieronder ziet u de publieke informatie:", foreground="white",
-                                      background="#AA0203", height=5, font=10)
+        self.label_informatie = tk.Label(self.frame_public, text="Hieronder ziet u de publieke informatie:",
+                                         foreground="white",
+                                         background="#AA0203", height=5, font=10)
         self.label_informatie.pack()
 
         self.back = tk.Button(self.frame_public, text="Terug", height=3, width=25, command=self.show_screen_intro)
@@ -114,6 +109,8 @@ class ScreenPublic:
     def show_screen_intro(self):
         self.frame_public.pack_forget()
         ScreenIntro(self.master)
+
+
 class ScreenOverview:
     def __init__(self, master):
         pass
@@ -132,7 +129,7 @@ class MainApplication(tk.Frame):
 
 if __name__ == "__main__":
     root = tk.Tk()
-    root.minsize(width=400, height=300)
+    root.minsize(width=1200, height=800)
 
     MainApplication(root).pack(side="top", fill="both", expand=True)
     root.mainloop()
