@@ -1,4 +1,16 @@
 import hashlib
+import urllib.request
+import os
+
+
+def download_img(url, imdb_id):
+    store_location = "data/images/%s.jpg" % imdb_id
+
+    if not os.path.isfile(store_location):
+        response = urllib.request.urlopen(url).read()
+        new_image = open(store_location, 'wb')
+        new_image.write(response)
+        new_image.close()
 
 
 def ft_url_builder(key, date):

@@ -7,8 +7,7 @@ from sqlobject import AND
 
 from thuisbioscoop.db.broadcast_time import BroadcastTime
 from thuisbioscoop.db.movie import Movie
-from thuisbioscoop.helpers import ft_url_builder
-
+from thuisbioscoop.helpers import ft_url_builder, download_img
 
 # TODO: move to config
 key = "b2yak0qh1og2kt7v3dc7cb5mah27iurf"
@@ -17,14 +16,6 @@ url = ft_url_builder(key, f"{datetime.datetime.now():%d-%m-%Y}")
 # url = ft_url_builder(key, "09-11-2017")
 response_xml = urllib.request.urlopen(url).read()
 response_dict = xmltodict.parse(response_xml)
-
-
-def download_img(url, imdb_id):
-    if not os.path.isfile("data/images/"+imdb_id+'.jpg'):
-        response = urllib.request.urlopen(url).read()
-        newImg = open("data/images/"+imdb_id+'.jpg', 'wb')
-        newImg.write(response)
-        newImg.close()
 
 for movie in response_dict['filmsoptv']['film']:
     stored_movie = Movie.select(Movie.q.imdb_id == movie["imdb_id"]).count()
