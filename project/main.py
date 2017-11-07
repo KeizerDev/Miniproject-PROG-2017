@@ -39,6 +39,23 @@ class ScreenSupplier():
         self.frame_supplier = tk.Frame(self.master, background="blue")
         self.frame_supplier.pack(fill="both", expand=True)
 
+        self.username = tk.Entry(master)
+        self.username.insert(0, "username")
+        self.username.pack()
+
+        self.password = tk.Entry(master)
+        self.password.insert(0, "wachtwoord")
+        self.password.pack()
+
+        self.submit = tk.Button(master, text="Login")
+        self.submit.pack()
+
+        self.back = tk.Button(master, text="Terug")
+        self.back.pack()
+
+    def show_screen_intro():
+        self.frame_supplier.pack_forget()
+        ScreenIntro(self.master)
 
 class ScreenVisitor():
     def __init__(self, master):
@@ -46,12 +63,35 @@ class ScreenVisitor():
         self.frame_visitor = tk.Frame(self.master, background="green")
         self.frame_visitor.pack(fill="both", expand=True)
 
+        self.username = tk.Entry(master)
+        self.username.insert(0, "username")
+        self.username.pack()
+
+        self.email = tk.Entry(master)
+        self.email.insert(0, "email")
+        self.email.pack()
+
+        self.suppliedMovies = tk.Button(master, text="Films die worden aangeboden door aanbieders")
+        self.suppliedMovies.pack()
+
+        self.numberOfVisitors = tk.Button(master, text="Aantal bezoekers per film")
+        self.numberOfVisitors.pack()
+
+        self.back = tk.Button(master, text="Terug")
+        self.back.pack()
+
 
 class ScreenPublic():
     def __init__(self, master):
         self.master = master
         self.frame_public = tk.Frame(self.master, background="black")
         self.frame_public.pack(fill="both", expand=True)
+
+        self.submit = tk.Button(master, text="Aanmelden")
+        self.submit.pack()
+
+        self.back = tk.Button(master, text="Terug")
+        self.back.pack()
 
 
 class MainApplication(tk.Frame):
@@ -71,3 +111,4 @@ if __name__ == "__main__":
 
     MainApplication(root).pack(side="top", fill="both", expand=True)
     root.mainloop()
+
