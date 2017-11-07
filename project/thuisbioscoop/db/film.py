@@ -4,7 +4,7 @@ from .connection import conn
 
 class Film(sqlobject.SQLObject):
     _connection = conn
-    _connection.debug = True
+    # _connection.debug = True
     ft_link = sqlobject.StringCol()
     title = sqlobject.StringCol()
     year = sqlobject.StringCol()

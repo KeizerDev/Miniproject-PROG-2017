@@ -13,24 +13,26 @@ import xmltodict
 doc = xmltodict.parse(response)
 
 for film in doc['filmsoptv']['film']:
-    print(film['titel'])
-    newFilm = Film(ft_link=film["ft_link"],
-                   title=film["titel"],
-                   year=film["jaar"],
-                   director=film["regisseur"],
-                   cast=film["cast"],
-                   genre=film["genre"],
-                   country=film["land"],
-                   cover_img=film["cover"],
-                   tagline=film["tagline"],
-                   length=int(film["duur"]),
-                   synopsis=film["synopsis"],
-                   ft_rating=float(film["ft_rating"]),
-                   ft_votes=int(film["ft_votes"]),
-                   imdb_id=film["imdb_id"],
-                   imdb_rating=float(film["imdb_rating"]),
-                   imdb_votes=int(film["imdb_votes"]),
-                   starttime=film["starttijd"],
-                   endtime=film["eindtijd"],
-                   channel=film["zender"],
-                   movietip=film["filmtip"])
+    storedFilm = Film.select(Film.q.imdb_id == film["imdb_id"]).count()
+
+    if not storedFilm:
+        newFilm = Film(ft_link=film["ft_link"],
+                       title=film["titel"],
+                       year=film["jaar"],
+                       director=film["regisseur"],
+                       cast=film["cast"],
+                       genre=film["genre"],
+                       country=film["land"],
+                       cover_img=film["cover"],
+                       tagline=film["tagline"],
+                       length=int(film["duur"]),
+                       synopsis=film["synopsis"],
+                       ft_rating=float(film["ft_rating"]),
+                       ft_votes=int(film["ft_votes"]),
+                       imdb_id=film["imdb_id"],
+                       imdb_rating=float(film["imdb_rating"]),
+                       imdb_votes=int(film["imdb_votes"]),
+                       starttime=film["starttijd"],
+                       endtime=film["eindtijd"],
+                       channel=film["zender"],
+                       movietip=film["filmtip"])
