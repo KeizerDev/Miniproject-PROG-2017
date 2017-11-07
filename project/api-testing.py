@@ -1,6 +1,8 @@
 import urllib.request
 import datetime
 import xmltodict
+import os.path
+
 from sqlobject import AND
 
 from thuisbioscoop.db.broadcast_time import BroadcastTime
@@ -50,3 +52,11 @@ for movie in response_dict['filmsoptv']['film']:
                                            ft_starttime=movie["starttijd"],
                                            ft_endtime=movie["eindtijd"],
                                            ft_channel=movie["zender"])
+
+    pic_url = movie["cover"]
+    response = urllib.request.urlopen(pic_url).read()
+
+    if not os.path.isfile("data/images/"+movie["imdb_id"]+'.jpg'):
+        newImg = open("data/images/"+movie["imdb_id"]+'.jpg', 'wb')
+        newImg.write(response)
+        newImg.close()
