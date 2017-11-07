@@ -60,13 +60,14 @@ class ScreenStartSupplier():
 
     def show_screen_overview_supplier(self):
         self.frame_supplier.pack_forget()
-        ScreenOverviewMoviesSupplier(self.master)
+        ScreenOverviewMovie(self.master)
 
     def show_screen_overview_visitors(self):
         self.frame_supplier.pack_forget()
-        ScreenOverviewVisitorsSupplier(self.master)
+        ScreenOverviewVisitors(self.master)
 
-class ScreenOverviewMoviesSupplier():
+
+class ScreenOverviewVisitors():
     def __init__(self, master):
         self.master = master
         self.frame_overview_supplier = tk.Frame(self.master, background="#AA0203")
@@ -87,7 +88,7 @@ class ScreenOverviewMoviesSupplier():
         ScreenConfirmationSupplier(self.master)
 
 
-class ScreenOverviewVisitorsSupplier():
+class ScreenOverviewVisitors():
     def __init__(self, master):
         self.master = master
         self.frame_overview_visitors = tk.Frame(self.master, background="#AA0203")
@@ -99,6 +100,7 @@ class ScreenOverviewVisitorsSupplier():
     def show_screen_intro(self):
         self.frame_overview_visitors.pack_forget()
         ScreenIntro(self.master)
+
 
 class ScreenConfirmationSupplier():
     def __init__(self, master):
@@ -154,7 +156,7 @@ class ScreenPublic:
         ScreenIntro(self.master)
 
 
-class ScreenOverview:
+class ScreenOverviewMovie:
     def __init__(self, master):
         pass
 
