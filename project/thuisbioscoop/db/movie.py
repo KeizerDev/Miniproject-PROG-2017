@@ -4,7 +4,7 @@ from .connection import conn
 
 class Movie(sqlobject.SQLObject):
     _connection = conn
-    _connection.debug = True
+    # _connection.debug = True
     ft_link = sqlobject.StringCol()
     ft_title = sqlobject.StringCol()
     ft_year = sqlobject.StringCol()
@@ -21,9 +21,6 @@ class Movie(sqlobject.SQLObject):
     imdb_id = sqlobject.StringCol(unique=True)
     imdb_rating = sqlobject.FloatCol()
     imdb_votes = sqlobject.IntCol()
-    ft_starttime = sqlobject.StringCol()
-    ft_endtime = sqlobject.StringCol()
-    ft_channel = sqlobject.StringCol()
     ft_movietip = sqlobject.StringCol()
 
 
