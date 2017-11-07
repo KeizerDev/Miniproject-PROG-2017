@@ -1,5 +1,7 @@
 import tkinter as tk
 
+from thuisbioscoop.ui.back_button import BackButton
+
 
 class ScreenIntro:
     def __init__(self, master):
@@ -51,7 +53,7 @@ class ScreenStartSupplier():
                                            height=3, width=35, command=self.show_screen_overview_supplier)
         self.codes_of_visitors.pack()
 
-        self.back = tk.Button(self.frame_supplier, text="Terug", command=self.show_screen_intro, height=3, width=25)
+        self.back = BackButton(self.frame_supplier, command=self.show_screen_intro)
         self.back.pack(side=tk.BOTTOM)
 
     def show_screen_intro(self):
@@ -73,10 +75,11 @@ class ScreenOverviewVisitors():
         self.frame_overview_supplier = tk.Frame(self.master, background="#AA0203")
         self.frame_overview_supplier.pack(fill="both", expand=True)
 
-        self.confirmation=tk.Button(self.frame_overview_supplier, text="Bevestig keuze", command=self.show_confirmation, height=3, width=25)
+        self.confirmation = tk.Button(self.frame_overview_supplier, text="Bevestig keuze",
+                                      command=self.show_confirmation, height=3, width=25)
         self.confirmation.pack(side=tk.BOTTOM)
 
-        self.back = tk.Button(self.frame_overview_supplier, text="Terug", command=self.show_screen_intro, height=3, width=25)
+        self.back = BackButton(self.frame_overview_supplier, command=self.show_screen_intro)
         self.back.pack(side=tk.BOTTOM)
 
     def show_screen_intro(self):
@@ -94,7 +97,7 @@ class ScreenOverviewVisitors():
         self.frame_overview_visitors = tk.Frame(self.master, background="#AA0203")
         self.frame_overview_visitors.pack(fill="both", expand=True)
 
-        self.back = tk.Button(self.frame_overview_visitors, text="Terug", command=self.show_screen_intro, height=3, width=25)
+        self.back = BackButton(self.frame_overview_visitors, command=self.show_screen_intro)
         self.back.pack(side=tk.BOTTOM)
 
     def show_screen_intro(self):
@@ -108,12 +111,13 @@ class ScreenConfirmationSupplier():
         self.frame_confirmation = tk.Frame(self.master, background="#AA0203")
         self.frame_confirmation.pack(fill="both", expand=True)
 
-        self.back = tk.Button(self.frame_confirmation, text="Terug", command=self.show_screen_intro, height=3, width=25)
+        self.back = BackButton(self.frame_confirmation, command=self.show_screen_intro)
         self.back.pack(side=tk.BOTTOM)
 
     def show_screen_intro(self):
         self.frame_confirmation.pack_forget()
         ScreenIntro(self.master)
+
 
 class ScreenStartVisitor():
     def __init__(self, master):
@@ -129,7 +133,7 @@ class ScreenStartVisitor():
         self.email.insert(0, "email")
         self.email.pack()
 
-        self.back = tk.Button(self.frame_visitor, text="Terug", height=3, width=25, command=self.show_screen_intro)
+        self.back = BackButton(self.frame_visitor, command=self.show_screen_intro)
         self.back.pack(side=tk.BOTTOM)
 
     def show_screen_intro(self):
@@ -148,7 +152,7 @@ class ScreenPublic:
                                          background="#AA0203", height=5, font=10)
         self.label_informatie.pack()
 
-        self.back = tk.Button(self.frame_public, text="Terug", height=3, width=25, command=self.show_screen_intro)
+        self.back = BackButton(self.frame_public, command=self.show_screen_intro)
         self.back.pack(side=tk.BOTTOM)
 
     def show_screen_intro(self):
@@ -158,7 +162,9 @@ class ScreenPublic:
 
 class ScreenOverviewMovie:
     def __init__(self, master):
-        pass
+        self.entry = tk.Entry(master)
+        self.entry.grid(row=2, column=3)
+        # button2.grid(row=2, column=3)
 
 
 class MainApplication(tk.Frame):
