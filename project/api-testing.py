@@ -7,7 +7,7 @@ from thuisbioscoop.helpers import ft_url_builder
 
 key = "b2yak0qh1og2kt7v3dc7cb5mah27iurf"
 
-url = ft_url_builder(key, "07-11-2017")
+url = ft_url_builder(key, "08-11-2017")
 response_xml = urllib.request.urlopen(url).read()
 response_dict = xmltodict.parse(response_xml)
 
