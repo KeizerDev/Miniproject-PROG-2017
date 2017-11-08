@@ -1,7 +1,8 @@
 import datetime
 import hashlib
-import urllib.request
 import os
+import re
+import urllib.request
 
 DOWNLOAD_LOCATION = "data/images/%s.jpg"
 
@@ -33,5 +34,16 @@ def text_to_md5(my_string):
 def generate_unique_code(str):
     return text_to_md5(str)[0:7]
 
+
 def get_current_date():
     return f"{datetime.now():%d-%m-%Y}"
+
+
+def is_valid_email(email):
+    is_valid = False
+    regex_email = r'\b[\w.-]+?@\w+?\.\w+?\b'
+    regex_results = re.findall(regex_email, email)
+    if regex_results[0]:
+        is_valid = True
+
+    return is_valid

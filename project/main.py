@@ -5,6 +5,8 @@ from PIL import ImageTk, Image
 from sqlobject import AND
 
 from thuisbioscoop.db.broadcast_time import BroadcastTime
+from thuisbioscoop.db.user import User
+from thuisbioscoop.helpers import generate_unique_code, is_valid_email
 from thuisbioscoop.helpers import get_image_path
 from thuisbioscoop.ui.back_button import BackButton
 from thuisbioscoop.ui.ui_config import COLOR_RED, FONT_SIZE_DEFAULT, COLOR_WHITE
@@ -56,6 +58,7 @@ class ScreenIntro:
     def show_screen_public(self):
         self.frame_start.pack_forget()
         ScreenPublic(self.master)
+
 
 class ScreenLoginSupplier:
     def __init__(self, master):
@@ -209,7 +212,16 @@ class ScreenStartVisitor:
         ScreenIntro(self.master)
 
     def do_sign_in(self):
-        print(self.email.get())
+        # @TODO: Validate email
+        username = self.username.get()
+        email = self.email.get()
+        if is_valid_email(email) and not User.selectBy(emailAddress=email).count():
+            User(
+                emailAddress=email,
+                name=username,
+                code=generate_unique_code(email)
+            )
+        else:
 
 
 class ScreenPublic:
