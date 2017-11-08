@@ -1,22 +1,44 @@
 import tkinter as tk
 
+from thuisbioscoop.db.movie import Movie
+from thuisbioscoop.helpers import get_image_path
 from thuisbioscoop.ui.back_button import BackButton
+from PIL import ImageTk, Image
+
+from thuisbioscoop.ui.ui_config import COLOR_RED, FONT_SIZE_DEFAULT, COLOR_WHITE
 
 
 class ScreenIntro:
     def __init__(self, master):
         self.master = master
-        self.frame_start = tk.Frame(master, background="#AA0203")
-        self.label_welcome = tk.Label(self.frame_start, text="Welkom, maak uw keuze:", foreground="white",
-                                      background="#AA0203", height=5, font=10)
-        self.button_supplier = tk.Button(self.frame_start, text="Ik ben aanbieder", height=3, width=25,
-                                         command=self.show_screen_supplier)
-        self.button_visitor = tk.Button(self.frame_start, text="Ik ben bezoeker", height=3, width=25,
-                                        command=self.show_screen_visitor)
-        self.button_public = tk.Button(self.frame_start, text="Ik wil publieke informatie zien", height=3, width=25,
-                                       command=self.show_screen_public)
-        self.frame_start.pack(fill="both", expand=True)
+        self.frame_start = tk.Frame(master, background=COLOR_RED)
+        self.label_welcome = tk.Label(self.frame_start,
+                                      text="Welkom, maak uw keuze:",
+                                      foreground=COLOR_WHITE,
+                                      background=COLOR_RED,
+                                      height=5,
+                                      font=FONT_SIZE_DEFAULT)
 
+        self.button_supplier = tk.Button(self.frame_start,
+                                         text="Ik ben aanbieder",
+                                         height=3,
+                                         width=25,
+                                         command=self.show_screen_supplier)
+
+        self.button_visitor = tk.Button(self.frame_start,
+                                        text="Ik ben bezoeker",
+                                        height=3,
+                                        width=25,
+                                        command=self.show_screen_visitor)
+
+        self.button_public = tk.Button(self.frame_start,
+                                       text="Ik wil publieke informatie zien",
+                                       height=3,
+                                       width=25,
+                                       command=self.show_screen_public)
+
+
+        self.frame_start.pack(fill="both", expand=True)
         self.label_welcome.pack()
         self.button_supplier.pack()
         self.button_visitor.pack()
@@ -38,11 +60,11 @@ class ScreenIntro:
 class ScreenStartSupplier():
     def __init__(self, master):
         self.master = master
-        self.frame_supplier = tk.Frame(self.master, background="#AA0203")
+        self.frame_supplier = tk.Frame(self.master, background=COLOR_RED)
         self.frame_supplier.pack(fill="both", expand=True)
 
-        self.label_keuze = tk.Label(self.frame_supplier, text="Maak uw keuze:", foreground="white",
-                                    background="#AA0203", height=5, font=10)
+        self.label_keuze = tk.Label(self.frame_supplier, text="Maak uw keuze:", foreground=COLOR_WHITE,
+                                    background=COLOR_RED, height=5, font=FONT_SIZE_DEFAULT)
         self.label_keuze.pack()
 
         self.suppliedMovies = tk.Button(self.frame_supplier, text="Films die u aanbiedt", height=3, width=35,
@@ -72,7 +94,7 @@ class ScreenStartSupplier():
 class ScreenOverviewVisitors():
     def __init__(self, master):
         self.master = master
-        self.frame_overview_visitors = tk.Frame(self.master, background="#AA0203")
+        self.frame_overview_visitors = tk.Frame(self.master, background=COLOR_RED)
         self.frame_overview_visitors.pack(fill="both", expand=True)
 
         self.confirmation = tk.Button(self.frame_overview_visitors, text="Bevestig keuze",
@@ -81,8 +103,8 @@ class ScreenOverviewVisitors():
 
         self.back = BackButton(self.frame_overview_visitors, command=self.show_screen_intro)
         self.information = tk.Label(self.frame_overview_visitors, text="Hieronder ziet u de tickets die verkocht zijn:",
-                                    foreground="white",
-                                    background="#AA0203", height=5, font=10)
+                                    foreground=COLOR_WHITE,
+                                    background=COLOR_RED, height=5, font=FONT_SIZE_DEFAULT)
         self.information.pack()
 
         self.back = BackButton(self.frame_overview_visitors, command=self.show_screen_intro)
@@ -99,13 +121,13 @@ class ScreenOverviewVisitors():
 class ScreenOverviewMovie:
     def __init__(self, master):
         self.master = master
-        self.frame_overview_movie = tk.Frame(self.master, background="#AA0203")
+        self.frame_overview_movie = tk.Frame(self.master, background=COLOR_RED)
         self.frame_overview_movie.pack(fill="both", expand=True)
 
         self.back = BackButton(self.frame_overview_movie, command=self.show_screen_intro)
         self.information = tk.Label(self.frame_overview_movie, text="Hieronder ziet u de films die u kunt aanbieden:",
-                                    foreground="white",
-                                    background="#AA0203", height=5, font=10)
+                                    foreground=COLOR_WHITE,
+                                    background=COLOR_RED, height=5, font=FONT_SIZE_DEFAULT)
         self.information.pack()
 
         self.confirmation = tk.Button(self.frame_overview_movie, text="Bevestig keuze",
@@ -128,7 +150,7 @@ class ScreenOverviewMovie:
 class ScreenConfirmationSupplier():
     def __init__(self, master):
         self.master = master
-        self.frame_confirmation = tk.Frame(self.master, background="#AA0203")
+        self.frame_confirmation = tk.Frame(self.master, background=COLOR_RED)
         self.frame_confirmation.pack(fill="both", expand=True)
 
         self.back = BackButton(self.frame_confirmation, command=self.show_screen_intro)
@@ -142,7 +164,7 @@ class ScreenConfirmationSupplier():
 class ScreenStartVisitor():
     def __init__(self, master):
         self.master = master
-        self.frame_visitor = tk.Frame(self.master, background="#AA0203")
+        self.frame_visitor = tk.Frame(self.master, background=COLOR_RED)
         self.frame_visitor.pack(fill="both", expand=True)
 
         self.username = tk.Entry(self.frame_visitor)
@@ -164,14 +186,55 @@ class ScreenStartVisitor():
 class ScreenPublic:
     def __init__(self, master):
         self.master = master
-        self.frame_public = tk.Frame(self.master, background="#AA0203")
+        self.frame_public = tk.Frame(self.master, background=COLOR_RED)
         self.frame_public.pack(fill="both", expand=True)
 
         self.label_informatie = tk.Label(self.frame_public, text="Hieronder ziet u de publieke informatie:",
-                                         foreground="white",
-                                         background="#AA0203", height=5, font=10)
+                                         foreground=COLOR_WHITE,
+                                         background=COLOR_RED, height=5, font=FONT_SIZE_DEFAULT)
         self.label_informatie.pack()
 
+        img = ImageTk.PhotoImage(Image.open("data/images/0118956.jpg"))
+        panel = tk.Label(master, image=img, height=300, width=200)
+        panel.pack(side=tk.BOTTOM)
+
+        self.back = BackButton(self.frame_public, command=self.show_screen_intro)
+        self.back.pack(side=tk.BOTTOM)
+
+    def show_screen_intro(self):
+        self.frame_public.pack_forget()
+        ScreenIntro(self.master)
+
+
+class ScreenMovie:
+    def __init__(self, master):
+        self.master = master
+        self.frame_public = tk.Frame(self.master, background=COLOR_RED)
+        self.frame_public.pack(fill="both", expand=True)
+
+        self.label_informatie = tk.Label(self.frame_public, text="Hieronder ziet u de publieke informatie:",
+                                         foreground=COLOR_WHITE,
+                                         background=COLOR_RED, height=5, font=FONT_SIZE_DEFAULT)
+        self.label_informatie.pack()
+
+        self.movie_grid = tk.Frame(self.frame_public, background=COLOR_RED)
+
+        movies = Movie.select()
+        print(movies)
+
+        i = 0
+        for movie in movies:
+            load = Image.open(get_image_path(movie.imdb_id))
+            render = ImageTk.PhotoImage(load)
+            i += 1
+            if (i > 5):
+                break;
+            # labels can be text or images
+            img = tk.Label(self.movie_grid, image=render)
+            img.image = render
+            img.pack(padx=5, pady=20, side=tk.LEFT)
+
+        self.movie_grid.pack(side=tk.TOP)
         self.back = BackButton(self.frame_public, command=self.show_screen_intro)
         self.back.pack(side=tk.BOTTOM)
 
@@ -183,12 +246,8 @@ class ScreenPublic:
 class MainApplication(tk.Frame):
     def __init__(self, parent, *args, **kwargs):
         tk.Frame.__init__(self, parent, *args, **kwargs)
-        self.screen_intro = ScreenIntro(self)
-
-        # Insert
-        # user3 = User(code="13", firstName="fkd", mi="fl", lastName="asld")
-        # selectUser = User.selectBy(code="123")
-        # print(selectUser)
+        # self.screen_intro = ScreenIntro(self)
+        self.screen_intro = ScreenMovie(self)
 
 
 if __name__ == "__main__":

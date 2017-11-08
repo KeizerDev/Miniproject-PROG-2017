@@ -7,7 +7,7 @@ from sqlobject import AND
 
 from thuisbioscoop.db.broadcast_time import BroadcastTime
 from thuisbioscoop.db.movie import Movie
-from thuisbioscoop.helpers import ft_url_builder, download_img
+from thuisbioscoop.helpers import ft_url_builder, download_image
 
 # TODO: move to config
 key = "b2yak0qh1og2kt7v3dc7cb5mah27iurf"
@@ -53,4 +53,4 @@ for movie in response_dict['filmsoptv']['film']:
                                            ft_endtime=movie["eindtijd"],
                                            ft_channel=movie["zender"])
 
-    download_img(movie['cover'], movie['imdb_id'])
+    download_image(movie['cover'], movie['imdb_id'])
