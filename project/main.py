@@ -5,8 +5,10 @@ from PIL import ImageTk, Image
 from sqlobject import AND
 
 from thuisbioscoop.db.broadcast_time import BroadcastTime
+from thuisbioscoop.db.movie import Movie
+from thuisbioscoop.db.supplier import Supplier
 from thuisbioscoop.db.user import User
-from thuisbioscoop.helpers import generate_unique_code, is_valid_email
+from thuisbioscoop.helpers import generate_unique_code, is_valid_email, text_to_md5
 from thuisbioscoop.helpers import get_image_path
 from thuisbioscoop.ui.back_button import BackButton
 from thuisbioscoop.ui.ui_config import COLOR_RED, FONT_SIZE_DEFAULT, COLOR_WHITE
@@ -49,7 +51,7 @@ class ScreenIntro:
 
     def show_screen_supplier(self):
         self.frame_start.pack_forget()
-        ScreenStartSupplier(self.master)
+        ScreenLoginSupplier(self.master)
 
     def show_screen_visitor(self):
         self.frame_start.pack_forget()
@@ -65,47 +67,44 @@ class ScreenLoginSupplier:
         self.master = master
         self.frame_login_supplier = tk.Frame(self.master, background=COLOR_RED)
 
-        self.label_keuze = tk.Label(self.frame_supplier,
-                                    text="Maak uw keuze:",
-                                    foreground=COLOR_WHITE,
-                                    background=COLOR_RED,
-                                    height=5,
-                                    font=FONT_SIZE_DEFAULT)
-        self.suppliedMovies = tk.Button(self.frame_supplier,
-                                        text="Films die u aanbiedt",
-                                        height=3,
-                                        width=35,
-                                        command=self.show_screen_overview_supplier)
-        self.codes_of_visitors = tk.Button(self.frame_supplier,
-                                           text="Bezoekers die een kaartje hebben gekocht",
-                                           height=3,
-                                           width=35,
-                                           command=self.show_screen_overview_visitors)
+        self.username = tk.Entry(self.frame_login_supplier)
+        self.username.insert(0, "Gebruikersnaam")
 
-        self.back = BackButton(self.frame_supplier, command=self.show_screen_intro)
+        self.password = tk.Entry(self.frame_login_supplier)
+        self.password.insert(0, "Wachtwoord")
 
-        self.frame_supplier.pack(fill="both", expand=True)
-        self.label_keuze.pack()
-        self.suppliedMovies.pack()
-        self.codes_of_visitors.pack()
+        self.sign_in = tk.Button(self.frame_login_supplier, text="Inloggen", height=3, width=25,
+                                 command=self.do_sign_in)
+
+        self.back = BackButton(self.frame_login_supplier, command=self.show_screen_intro)
+
+        self.frame_login_supplier.pack()
+        self.username.pack()
+        self.password.pack()
+        self.sign_in.pack(side=tk.BOTTOM)
         self.back.pack(side=tk.BOTTOM)
 
     def show_screen_intro(self):
-        self.frame_supplier.pack_forget()
+        self.frame_login_supplier.pack_forget()
         ScreenIntro(self.master)
 
-    def show_screen_overview_supplier(self):
-        self.frame_supplier.pack_forget()
-        ScreenOverviewMovie(self.master)
+    def show_screen_start_supplier(self, supplier):
+        self.frame_login_supplier.pack_forget()
+        ScreenStartSupplier(self.master, supplier)
 
-    def show_screen_overview_visitors(self):
-        self.frame_supplier.pack_forget()
-        ScreenOverviewVisitors(self.master)
+    def do_sign_in(self):
+        text_username = self.username.get()
+        md5_password = text_to_md5(self.password.get())
+        get_supplier = Supplier.selectBy(username=text_username, password=md5_password)
+        if get_supplier.count():
+            self.show_screen_start_supplier(get_supplier[0])
 
 
 class ScreenStartSupplier():
-    def __init__(self, master):
+    def __init__(self, master, supplier):
         self.master = master
+        self.supplier = supplier
+
         self.frame_supplier = tk.Frame(self.master, background=COLOR_RED)
         self.label_keuze = tk.Label(self.frame_supplier,
                                     text="Maak uw keuze:",
@@ -114,7 +113,7 @@ class ScreenStartSupplier():
                                     height=5,
                                     font=FONT_SIZE_DEFAULT)
         self.suppliedMovies = tk.Button(self.frame_supplier,
-                                        text="Films die u aanbiedt",
+                                        text="Films die u kunt aanbieden",
                                         height=3,
                                         width=35,
                                         command=self.show_screen_overview_supplier)
@@ -138,11 +137,74 @@ class ScreenStartSupplier():
 
     def show_screen_overview_supplier(self):
         self.frame_supplier.pack_forget()
-        ScreenOverviewMovie(self.master)
+        ScreenOverviewMovieSupplier(self.master, self.supplier)
 
     def show_screen_overview_visitors(self):
         self.frame_supplier.pack_forget()
         ScreenOverviewVisitors(self.master)
+
+
+class ScreenOverviewMovieSupplier:
+    def __init__(self, master, supplier):
+        self.master = master
+        self.supplier = supplier
+
+        self.frame_overview_movie = tk.Frame(self.master, background=COLOR_RED)
+        self.label_information = tk.Label(self.frame_overview_movie,
+                                          text="Hieronder ziet u de films die u kunt aanbieden:",
+                                          foreground=COLOR_WHITE,
+                                          background=COLOR_RED,
+                                          height=5,
+                                          font=FONT_SIZE_DEFAULT)
+
+        self.frame_movie_grid = tk.Frame(self.frame_overview_movie,
+                                         background=COLOR_RED)
+
+        self.btn_confirmation = tk.Button(self.frame_overview_movie,
+                                          text="Bevestig keuze",
+                                          command=self.show_confirmation,
+                                          height=3,
+                                          width=25)
+
+        self.btn_back = BackButton(self.frame_overview_movie, command=self.show_screen_intro)
+
+        ts = datetime.datetime.now()
+        tst = datetime.datetime.now() + datetime.timedelta(days=1)
+        print(tst)
+
+        movies = BroadcastTime.select(
+            AND(
+                BroadcastTime.q.ft_starttime > ts.strftime("%s"),
+                BroadcastTime.q.ft_starttime < tst.strftime("%s"),
+            )
+        )
+
+        for movie in movies:
+            load = Image.open(get_image_path(movie.imdb_id))
+            render = ImageTk.PhotoImage(load)
+            # labels can be text or images
+            img = tk.Label(self.frame_movie_grid, image=render, text=movie.imdb_id)
+            img.image = render
+            img.pack(padx=5, pady=20, side=tk.LEFT)
+            img.bind('<Button-1>', self.handle_movie_click)
+
+        self.frame_overview_movie.pack(fill="both", expand=True)
+        self.label_information.pack()
+        self.frame_movie_grid.pack(side=tk.TOP)
+        self.btn_confirmation.pack(side=tk.BOTTOM)
+        self.btn_back.pack(side=tk.BOTTOM)
+
+    def show_screen_intro(self):
+        self.frame_overview_movie.pack_forget()
+        ScreenIntro(self.master)
+
+    def show_confirmation(self, imdb_id):
+        self.frame_overview_movie.pack_forget()
+        ScreenConfirmationSupplier(self.master, self.supplier, imdb_id)
+
+    def handle_movie_click(self, event):
+        imdb_id = event.widget.cget("text")
+        self.show_confirmation(imdb_id)
 
 
 class ScreenOverviewVisitors():
@@ -173,12 +235,28 @@ class ScreenOverviewVisitors():
 
 
 class ScreenConfirmationSupplier():
-    def __init__(self, master):
+    def __init__(self, master, supplier, imdb_id):
         self.master = master
+        self.supplier = supplier
+        self.imdb_id = imdb_id
+
+        self.movie = Movie.selectBy(imdb_id=self.imdb_id)[0]
+
         self.frame_confirmation = tk.Frame(self.master, background=COLOR_RED)
-        self.frame_confirmation.pack(fill="both", expand=True)
+
+        self.label_confirmation = tk.Label(self.frame_confirmation, text="U heeft voor de volgende film gekozen:",
+                                           foreground=COLOR_WHITE,
+                                           background=COLOR_RED, height=5, font=FONT_SIZE_DEFAULT)
+
+        self.label_movie = tk.Label(self.frame_confirmation, text=self.movie.ft_title,
+                                    foreground=COLOR_WHITE,
+                                    background=COLOR_RED, height=5, font=FONT_SIZE_DEFAULT)
 
         self.back = BackButton(self.frame_confirmation, command=self.show_screen_intro)
+
+        self.frame_confirmation.pack(fill="both", expand=True)
+        self.label_confirmation.pack()
+        self.label_movie.pack()
         self.back.pack(side=tk.BOTTOM)
 
     def show_screen_intro(self):
@@ -222,6 +300,7 @@ class ScreenStartVisitor:
                 code=generate_unique_code(email)
             )
         else:
+            pass
 
 
 class ScreenPublic:
@@ -241,62 +320,6 @@ class ScreenPublic:
     def show_screen_intro(self):
         self.frame_public.pack_forget()
         ScreenIntro(self.master)
-
-
-class ScreenOverviewMovie:
-    def __init__(self, master):
-        self.master = master
-        self.frame_overview_movie = tk.Frame(self.master, background=COLOR_RED)
-        self.label_information = tk.Label(self.frame_overview_movie,
-                                          text="Hieronder ziet u de films die u kunt aanbieden:",
-                                          foreground=COLOR_WHITE,
-                                          background=COLOR_RED,
-                                          height=5,
-                                          font=FONT_SIZE_DEFAULT)
-
-        self.frame_movie_grid = tk.Frame(self.frame_overview_movie,
-                                         background=COLOR_RED)
-
-        self.btn_confirmation = tk.Button(self.frame_overview_movie,
-                                          text="Bevestig keuze",
-                                          command=self.show_confirmation,
-                                          height=3,
-                                          width=25)
-
-        self.btn_back = BackButton(self.frame_overview_movie, command=self.show_screen_intro)
-
-        ts = datetime.datetime.now()
-        tst = datetime.datetime.now() + datetime.timedelta(days=1)
-        print(tst)
-
-        movies = BroadcastTime.select(
-            AND(
-                BroadcastTime.q.ft_starttime > ts.strftime("%s"),
-                BroadcastTime.q.ft_starttime < tst.strftime("%s"),
-            )
-        )
-
-        for movie in movies:
-            load = Image.open(get_image_path(movie.imdb_id))
-            render = ImageTk.PhotoImage(load)
-            # labels can be text or images
-            img = tk.Label(self.frame_movie_grid, image=render)
-            img.image = render
-            img.pack(padx=5, pady=20, side=tk.LEFT)
-
-        self.frame_overview_movie.pack(fill="both", expand=True)
-        self.label_information.pack()
-        self.frame_movie_grid.pack(side=tk.TOP)
-        self.btn_confirmation.pack(side=tk.BOTTOM)
-        self.btn_back.pack(side=tk.BOTTOM)
-
-    def show_screen_intro(self):
-        self.frame_overview_movie.pack_forget()
-        ScreenIntro(self.master)
-
-    def show_confirmation(self):
-        self.frame_overview_movie.pack_forget()
-        ScreenConfirmationSupplier(self.master)
 
 
 class MainApplication(tk.Frame):
