@@ -1,10 +1,12 @@
+import datetime
 import tkinter as tk
 
-from thuisbioscoop.db.movie import Movie
+from PIL import ImageTk, Image
+from sqlobject import AND
+
+from thuisbioscoop.db.broadcast_time import BroadcastTime
 from thuisbioscoop.helpers import get_image_path
 from thuisbioscoop.ui.back_button import BackButton
-from PIL import ImageTk, Image
-
 from thuisbioscoop.ui.ui_config import COLOR_RED, FONT_SIZE_DEFAULT, COLOR_WHITE
 
 
@@ -54,6 +56,48 @@ class ScreenIntro:
     def show_screen_public(self):
         self.frame_start.pack_forget()
         ScreenPublic(self.master)
+
+class ScreenLoginSupplier:
+    def __init__(self, master):
+        self.master = master
+        self.frame_login_supplier = tk.Frame(self.master, background=COLOR_RED)
+
+        self.label_keuze = tk.Label(self.frame_supplier,
+                                    text="Maak uw keuze:",
+                                    foreground=COLOR_WHITE,
+                                    background=COLOR_RED,
+                                    height=5,
+                                    font=FONT_SIZE_DEFAULT)
+        self.suppliedMovies = tk.Button(self.frame_supplier,
+                                        text="Films die u aanbiedt",
+                                        height=3,
+                                        width=35,
+                                        command=self.show_screen_overview_supplier)
+        self.codes_of_visitors = tk.Button(self.frame_supplier,
+                                           text="Bezoekers die een kaartje hebben gekocht",
+                                           height=3,
+                                           width=35,
+                                           command=self.show_screen_overview_visitors)
+
+        self.back = BackButton(self.frame_supplier, command=self.show_screen_intro)
+
+        self.frame_supplier.pack(fill="both", expand=True)
+        self.label_keuze.pack()
+        self.suppliedMovies.pack()
+        self.codes_of_visitors.pack()
+        self.back.pack(side=tk.BOTTOM)
+
+    def show_screen_intro(self):
+        self.frame_supplier.pack_forget()
+        ScreenIntro(self.master)
+
+    def show_screen_overview_supplier(self):
+        self.frame_supplier.pack_forget()
+        ScreenOverviewMovie(self.master)
+
+    def show_screen_overview_visitors(self):
+        self.frame_supplier.pack_forget()
+        ScreenOverviewVisitors(self.master)
 
 
 class ScreenStartSupplier():
@@ -154,7 +198,7 @@ class ScreenStartVisitor:
         self.email.pack()
 
         self.sign_in = tk.Button(self.frame_visitor, text="Inloggen", height=3, width=25,
-                                       command=self.do_sign_in)
+                                 command=self.do_sign_in)
         self.sign_in.pack(side=tk.BOTTOM)
 
         self.back = BackButton(self.frame_visitor, command=self.show_screen_intro)
@@ -167,6 +211,7 @@ class ScreenStartVisitor:
     def do_sign_in(self):
         print(self.email.get())
 
+
 class ScreenPublic:
     def __init__(self, master):
         self.master = master
@@ -177,10 +222,6 @@ class ScreenPublic:
                                          foreground=COLOR_WHITE,
                                          background=COLOR_RED, height=5, font=FONT_SIZE_DEFAULT)
         self.label_informatie.pack()
-
-        img = ImageTk.PhotoImage(Image.open("data/images/0118956.jpg"))
-        panel = tk.Label(master, image=img, height=300, width=200)
-        panel.pack(side=tk.BOTTOM)
 
         self.back = BackButton(self.frame_public, command=self.show_screen_intro)
         self.back.pack(side=tk.BOTTOM)
@@ -212,15 +253,20 @@ class ScreenOverviewMovie:
 
         self.btn_back = BackButton(self.frame_overview_movie, command=self.show_screen_intro)
 
-        movies = Movie.select()
+        ts = datetime.datetime.now()
+        tst = datetime.datetime.now() + datetime.timedelta(days=1)
+        print(tst)
 
-        i = 0
+        movies = BroadcastTime.select(
+            AND(
+                BroadcastTime.q.ft_starttime > ts.strftime("%s"),
+                BroadcastTime.q.ft_starttime < tst.strftime("%s"),
+            )
+        )
+
         for movie in movies:
             load = Image.open(get_image_path(movie.imdb_id))
             render = ImageTk.PhotoImage(load)
-            i += 1
-            if (i > 5):
-                break
             # labels can be text or images
             img = tk.Label(self.frame_movie_grid, image=render)
             img.image = render

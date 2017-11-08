@@ -1,3 +1,4 @@
+import datetime
 import hashlib
 import urllib.request
 import os
@@ -31,3 +32,6 @@ def text_to_md5(my_string):
 
 def generate_unique_code(str):
     return text_to_md5(str)[0:7]
+
+def get_current_date():
+    return f"{datetime.now():%d-%m-%Y}"
