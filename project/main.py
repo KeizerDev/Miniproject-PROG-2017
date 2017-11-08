@@ -139,19 +139,23 @@ class ScreenConfirmationSupplier():
         ScreenIntro(self.master)
 
 
-class ScreenStartVisitor():
+class ScreenStartVisitor:
     def __init__(self, master):
         self.master = master
         self.frame_visitor = tk.Frame(self.master, background="#AA0203")
         self.frame_visitor.pack(fill="both", expand=True)
 
         self.username = tk.Entry(self.frame_visitor)
-        self.username.insert(0, "username")
+        self.username.insert(0, "Gebruikersnaam")
         self.username.pack()
 
         self.email = tk.Entry(self.frame_visitor)
-        self.email.insert(0, "email")
+        self.email.insert(0, "e-mailadres")
         self.email.pack()
+
+        self.sign_in = tk.Button(self.frame_visitor, text="Inloggen", height=3, width=25,
+                                       command=self.do_sign_in)
+        self.sign_in.pack(side=tk.BOTTOM)
 
         self.back = BackButton(self.frame_visitor, command=self.show_screen_intro)
         self.back.pack(side=tk.BOTTOM)
@@ -160,6 +164,8 @@ class ScreenStartVisitor():
         self.frame_visitor.pack_forget()
         ScreenIntro(self.master)
 
+    def do_sign_in(self):
+        print(self.email.get())
 
 class ScreenPublic:
     def __init__(self, master):
