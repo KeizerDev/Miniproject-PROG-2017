@@ -1,7 +1,9 @@
+import re
 import tkinter as tk
 
 from thuisbioscoop.db.movie import Movie
-from thuisbioscoop.helpers import get_image_path
+from thuisbioscoop.db.user import User
+from thuisbioscoop.helpers import get_image_path, generate_unique_code, is_valid_email
 from thuisbioscoop.ui.back_button import BackButton
 from PIL import ImageTk, Image
 
@@ -154,7 +156,7 @@ class ScreenStartVisitor:
         self.email.pack()
 
         self.sign_in = tk.Button(self.frame_visitor, text="Inloggen", height=3, width=25,
-                                       command=self.do_sign_in)
+                                 command=self.do_sign_in)
         self.sign_in.pack(side=tk.BOTTOM)
 
         self.back = BackButton(self.frame_visitor, command=self.show_screen_intro)
@@ -165,7 +167,16 @@ class ScreenStartVisitor:
         ScreenIntro(self.master)
 
     def do_sign_in(self):
-        print(self.email.get())
+        # @TODO: Validate email
+        username = self.username.get()
+        email = self.email.get()
+        if is_valid_email(email) and not User.selectBy(emailAddress=email).count():
+            User(
+                emailAddress=email,
+                name=username,
+                code=generate_unique_code(email)
+            )
+        else:
 
 class ScreenPublic:
     def __init__(self, master):
