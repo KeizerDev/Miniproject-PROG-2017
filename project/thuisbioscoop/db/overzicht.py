@@ -15,12 +15,14 @@ from thuisbioscoop.db.movie import Movie
 #     users =
 
 def supplier_films():
-    suppliers = BroadcastTime.select(BroadcastTime.q.ft_channel)
-    movie_title = Movie.select(Movie.q.ft_title)
+    # suppliers = BroadcastTime.select(BroadcastTime.q.ft_channel)
+    # movie_title = Movie.select(Movie.q.ft_title)
     movie_id_1 = Movie.select(Movie.q.imdb_id)
     movie_id_2 = BroadcastTime.select(BroadcastTime.q.imdb_id)
     if movie_id_1 == movie_id_2:
         print(Movie.selectBy(code = movie_id_1).locate.ft_title + 'op' + BroadcastTime.selectBy(code = movie_id_2).locate.ft_channel)
+    else:
+        return
 
 # def valid_key(expire_date, current_date):
 #     expire_date = BroadcastTime.select(BroadcastTime.q.ft_endtime)
@@ -28,4 +30,3 @@ def supplier_films():
 #     if expire_date > current_date:
 #
 #     else:
-
