@@ -2,15 +2,21 @@ import hashlib
 import urllib.request
 import os
 
+DOWNLOAD_LOCATION = "data/images/%s.jpg"
 
-def download_img(url, imdb_id):
-    store_location = "data/images/%s.jpg" % imdb_id
+
+def download_image(url, imdb_id):
+    store_location = DOWNLOAD_LOCATION % imdb_id
 
     if not os.path.isfile(store_location):
         response = urllib.request.urlopen(url).read()
         new_image = open(store_location, 'wb')
         new_image.write(response)
         new_image.close()
+
+
+def get_image_path(imdb_id):
+    return DOWNLOAD_LOCATION % imdb_id
 
 
 def ft_url_builder(key, date):
@@ -25,4 +31,3 @@ def text_to_md5(my_string):
 
 def generate_unique_code(str):
     return text_to_md5(str)[0:7]
-
