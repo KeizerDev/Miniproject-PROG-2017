@@ -10,6 +10,7 @@ from thuisbioscoop.db.broadcast_time import BroadcastTime
 from thuisbioscoop.db.movie import Movie
 from thuisbioscoop.db.supplier import Supplier
 from thuisbioscoop.db.user import User
+from thuisbioscoop.db.user_broadcast_supplier import UserBroadcastSupplier
 from thuisbioscoop.helpers import generate_unique_code, text_to_md5, get_timestamp
 from thuisbioscoop.helpers import get_image_path
 from thuisbioscoop.ui.back_button import BackButton
@@ -238,7 +239,6 @@ class ScreenOverviewMovieVisitors:
         self.master = master
         self.frame_overview_visitors = tk.Frame(self.master, background=COLOR_RED)
 
-
         self.frame_movie_grid = tk.Frame(self.frame_overview_visitors,
                                          background=COLOR_RED)
         self.back = BackButton(self.frame_overview_visitors, command=self.show_screen_intro)
@@ -257,13 +257,12 @@ class ScreenOverviewMovieVisitors:
         )
 
         for movie in available_movies:
-            item = BroadcastSupplier.selectBy(broadcast_time_id=movie.id)
-            print(item.count())
-            if item.count():
+            broadcast_supplier = BroadcastSupplier.selectBy(broadcast_time_id=movie.id)
+            if broadcast_supplier.count():
                 load = Image.open(get_image_path(movie.imdb_id))
                 render = ImageTk.PhotoImage(load)
                 # labels can be text or images
-                img = tk.Label(self.frame_movie_grid, image=render, text=movie.imdb_id)
+                img = tk.Label(self.frame_movie_grid, image=render, text=broadcast_supplier[0].id)
                 img.image = render
                 img.pack(padx=5, pady=20, side=tk.LEFT)
                 img.bind('<Button-1>', self.handle_movie_click)
@@ -277,13 +276,13 @@ class ScreenOverviewMovieVisitors:
         self.frame_overview_visitors.pack_forget()
         ScreenIntro(self.master)
 
-    def show_confirmation(self, imdb_id):
+    def show_confirmation(self, broadcast_supplier_id):
         self.frame_overview_visitors.pack_forget()
-        ScreenSignInVisitor(self.master, imdb_id)
+        ScreenSignInVisitor(self.master, broadcast_supplier_id)
 
     def handle_movie_click(self, event):
-        imdb_id = event.widget.cget("text")
-        self.show_confirmation(imdb_id)
+        broadcast_supplier_id = event.widget.cget("text")
+        self.show_confirmation(broadcast_supplier_id)
 
 
 class ScreenConfirmationSupplier:
@@ -331,11 +330,10 @@ class ScreenConfirmationSupplier:
 
 
 class ScreenSignInVisitor:
-    def __init__(self, master, imdb_id):
+    def __init__(self, master, broadcast_supplier_id):
         self.master = master
-        self.imdb_id = imdb_id
+        self.broadcast_supplier_id = broadcast_supplier_id
         self.frame_visitor = tk.Frame(self.master, background=COLOR_RED)
-
 
         self.username = tk.Entry(self.frame_visitor)
         self.username.insert(0, "Gebruikersnaam")
@@ -352,7 +350,7 @@ class ScreenSignInVisitor:
                                  foreground=COLOR_GREY,
                                  font=FONT_BUTTON)
         self.back = BackButton(self.frame_visitor, command=self.show_screen_intro)
-        
+
         self.frame_visitor.pack(fill="both", expand=True)
         self.email.pack()
         self.username.pack()
@@ -364,31 +362,74 @@ class ScreenSignInVisitor:
         self.frame_visitor.pack_forget()
         ScreenIntro(self.master)
 
+    def show_screen_ticket_visitor(self, code):
+        self.frame_visitor.pack_forget()
+        ScreenTicketVisitor(self.master, code, str(self.broadcast_supplier_id))
+
     def do_sign_in(self):
         username = self.username.get()
         email = self.email.get()
 
-        is_valid_email = validate_email(email)
-        if is_valid_email and not User.selectBy(emailAddress=email).count():
-            new_user = User(
+        if not validate_email(email):
+            self.label_error.configure(text="Username of het e-mailadres is foutfief")
+            return
+
+        if not User.selectBy(emailAddress=email).count():
+            user = User(
                 emailAddress=email,
                 name=username
             )
 
-            new_user.id
-            code = generate_unique_code(email + self.imdb_id)
-
         else:
-            pass
+            user = User.selectBy(emailAddress=email)[0]
 
-        is_valid_email = validate_email(email)
-        if is_valid_email and not User.selectBy(emailAddress=email).count():
-            User(
-                emailAddress=email,
-                name=username,
-                code=generate_unique_code(email))
+        code = generate_unique_code(email + str(self.broadcast_supplier_id))
+
+        if not UserBroadcastSupplier.selectBy(code=code).count():
+            UserBroadcastSupplier(
+                user_id=user.id,
+                broadcast_supplier_id=self.broadcast_supplier_id,
+                code=code
+            )
+            self.show_screen_ticket_visitor(code)
         else:
-            self.label_error.configure(text="Username of het e-mailadres is foutfief")
+            self.label_error.configure(text="U bent al aangemeld voor deze film")
+            return
+
+class ScreenTicketVisitor:
+    def __init__(self, master, code, broadcast_supplier_id):
+        self.master = master
+        self.code = code
+        self.broadcast_supplier_id = broadcast_supplier_id
+
+        self.frame_ticket_visitor = tk.Frame(self.master, background=COLOR_RED)
+        self.label_code = tk.Label(self.frame_ticket_visitor,
+                                   text=self.code,
+                                   foreground=COLOR_WHITE,
+                                   background=COLOR_RED,
+                                   height=5,
+                                   font=FONT_SIZE_DEFAULT)
+        self.label_supplier = tk.Label(self.frame_ticket_visitor,
+                                       foreground=COLOR_WHITE,
+                                       background=COLOR_RED,
+                                       height=5,
+                                       font=FONT_SIZE_DEFAULT)
+
+        self.back = BackButton(self.frame_ticket_visitor, command=self.show_screen_intro)
+
+        broadcast_supplier = BroadcastSupplier.selectBy(id=self.broadcast_supplier_id)
+        supplier = Supplier.selectBy(id=broadcast_supplier[0].supplier_id)
+
+        self.label_supplier.configure(text=supplier[0].username)
+
+        self.frame_ticket_visitor.pack(fill="both", expand=True)
+        self.label_code.pack()
+        self.label_supplier.pack()
+        self.back.pack(side=tk.BOTTOM)
+
+    def show_screen_intro(self):
+        self.frame_ticket_visitor.pack_forget()
+        ScreenIntro(self.master)
 
 
 class ScreenPublic:
