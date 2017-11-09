@@ -336,7 +336,7 @@ class ScreenSignInVisitor:
         self.imdb_id = imdb_id
         self.frame_visitor = tk.Frame(self.master, background=COLOR_RED)
 
-        self.information = tk.Label(self.frame_visitor, text="Vul een hier je gegevens in om een kaartje te krijgen:",
+        self.information = tk.Label(self.frame_visitor, text="Vul een hier uw gegevens in om een kaartje te krijgen:",
                                     foreground=COLOR_WHITE,
                                     background=COLOR_RED, height=5,
                                     font=FONT_SIZE_DEFAULT)
@@ -395,7 +395,7 @@ class ScreenSignInVisitor:
                 name=username,
                 code=generate_unique_code(email))
         else:
-            self.label_error.configure(text="Username of het e-mailadres is foutfief")
+            self.label_error.configure(text="Username of het e-mailadres is foutief")
 
 
 class ScreenPublic:
