@@ -1,4 +1,5 @@
 import tkinter as tk
+from thuisbioscoop.ui.ui_config import COLOR_BLACK, COLOR_GREY, FONT_BUTTON
 
 
 class BackButton(tk.Button):
@@ -7,3 +8,6 @@ class BackButton(tk.Button):
         self['width'] = 25
         self['height'] = 3
         self['text'] = "Terug"
+        self['background']=COLOR_BLACK
+        self['foreground']=COLOR_GREY
+        self['font']=FONT_BUTTON

@@ -100,11 +100,7 @@ class ScreenLoginSupplier:
                                  foreground=COLOR_GREY,
                                  font=FONT_BUTTON)
 
-        self.back = BackButton(self.frame_login_supplier,
-                               command=self.show_screen_intro,
-                               background=COLOR_BLACK,
-                               foreground=COLOR_GREY,
-                               font=FONT_BUTTON)
+        self.back = BackButton(self.frame_login_supplier, command=self.show_screen_intro)
 
         self.frame_login_supplier.pack(fill="both", expand=True)
         self.info.pack()
@@ -161,11 +157,7 @@ class ScreenStartSupplier:
                                            font=FONT_BUTTON)
 
         self.back = BackButton(self.frame_supplier,
-                               command=self.show_screen_intro,
-                               background=COLOR_BLACK,
-                               foreground=COLOR_GREY,
-                               font=FONT_BUTTON)
-
+                               command=self.show_screen_intro)
         self.frame_supplier.pack(fill="both", expand=True)
         self.label_keuze.pack()
         self.suppliedMovies.pack()
@@ -208,10 +200,7 @@ class ScreenOverviewMovieSupplier:
                                           background=COLOR_BLACK,
                                           foreground=COLOR_GREY)
 
-        self.btn_back = BackButton(self.frame_overview_movie, command=self.show_screen_intro,
-                                   background=COLOR_BLACK,
-                                   foreground=COLOR_GREY,
-                                   font=FONT_BUTTON)
+        self.btn_back = BackButton(self.frame_overview_movie, command=self.show_screen_intro)
 
         ts_today = datetime.datetime.now()
         ts_tomorrow = ts_today + datetime.timedelta(days=1)
@@ -224,13 +213,15 @@ class ScreenOverviewMovieSupplier:
         )
 
         for movie in movies:
-            load = Image.open(get_image_path(movie.imdb_id))
-            render = ImageTk.PhotoImage(load)
-            # labels can be text or images
-            img = tk.Label(self.frame_movie_grid, image=render, text=movie.imdb_id)
-            img.image = render
-            img.pack(padx=5, pady=20, side=tk.LEFT)
-            img.bind('<Button-1>', self.handle_movie_click)
+            item = BroadcastSupplier.selectBy(broadcast_time_id=movie.id)
+            if not item.count():
+                load = Image.open(get_image_path(movie.imdb_id))
+                render = ImageTk.PhotoImage(load)
+                # labels can be text or images
+                img = tk.Label(self.frame_movie_grid, image=render, text=movie.imdb_id)
+                img.image = render
+                img.pack(padx=5, pady=20, side=tk.LEFT)
+                img.bind('<Button-1>', self.handle_movie_click)
 
         self.frame_overview_movie.pack(fill="both", expand=True)
         self.label_information.pack()
@@ -258,10 +249,7 @@ class ScreenOverviewMovieVisitors:
 
         self.frame_movie_grid = tk.Frame(self.frame_overview_visitors,
                                          background=COLOR_RED)
-        self.back = BackButton(self.frame_overview_visitors, command=self.show_screen_intro,
-                               background=COLOR_BLACK,
-                               foreground=COLOR_GREY,
-                               font=FONT_BUTTON)
+        self.back = BackButton(self.frame_overview_visitors, command=self.show_screen_intro)
         self.information = tk.Label(self.frame_overview_visitors, text="Hieronder ziet u de tickets die verkocht zijn:",
                                     foreground=COLOR_WHITE,
                                     background=COLOR_RED, height=5,
@@ -326,10 +314,7 @@ class ScreenConfirmationSupplier:
                                     height=5,
                                     font=FONT_SIZE_DEFAULT)
 
-        self.back = BackButton(self.frame_confirmation, command=self.show_screen_intro,
-                               background=COLOR_BLACK,
-                               foreground=COLOR_GREY,
-                               font=FONT_BUTTON)
+        self.back = BackButton(self.frame_confirmation, command=self.show_screen_intro)
 
         self.frame_confirmation.pack(fill="both", expand=True)
         self.label_confirmation.pack()
@@ -378,8 +363,7 @@ class ScreenSignInVisitor:
                                  font=FONT_BUTTON)
 
         self.sign_in.pack(side=tk.BOTTOM)
-        self.back = BackButton(self.frame_visitor, command=self.show_screen_intro, background=COLOR_BLACK,
-                               foreground=COLOR_GREY)
+        self.back = BackButton(self.frame_visitor, command=self.show_screen_intro)
         self.back.pack(side=tk.BOTTOM)
 
     def show_screen_intro(self):
@@ -423,11 +407,7 @@ class ScreenPublic:
                                          font=FONT_SIZE_DEFAULT)
         self.label_informatie.pack()
 
-        self.back = BackButton(self.frame_public,
-                               command=self.show_screen_intro,
-                               background=COLOR_BLACK,
-                               foreground=COLOR_GREY,
-                               font=FONT_BUTTON)
+        self.back = BackButton(self.frame_public, command=self.show_screen_intro)
 
         self.back.pack(side=tk.BOTTOM)
 
