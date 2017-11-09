@@ -194,28 +194,29 @@ class ScreenOverviewVisitors:
         self.frame_movie_grid = tk.Frame(self.frame_overview_visitors,
                                          background=COLOR_RED)
 
-        self.btn_back = BackButton(self.frame_overview_visitors, command=self.show_screen_start_supplier)
+        # self.btn_back = BackButton(self.frame_overview_visitors, command=self.show_screen_start_supplier)
 
         timestamp = get_timestamp()
-        movies = BroadcastTime.select(
+        broadcast_times = BroadcastTime.select(
             AND(
                 BroadcastTime.q.ft_starttime > timestamp["today"],
                 BroadcastTime.q.ft_starttime < timestamp["tomorrow"]
             )
         )
 
-        for movie in movies:
-            item = BroadcastSupplier.selectBy(broadcast_time_id=movie.id)
+        for broadcast_time in broadcast_times:
+            broadcast_supplier = BroadcastSupplier.selectBy(broadcast_time_id=broadcast_time.id)
+            movie = Movie.selectBy(imdb_id=broadcast_time.imdb_id)
+            if broadcast_supplier.count():
+                users = UserBroadcastSupplier.selectBy(broadcast_supplier_id=broadcast_supplier[0].id)
 
-            users = UserBroadcastSupplier.selectBy(broadcast_supplier_id=item[0].id)
-
-            visitors_label = tk.Label(self.frame_movie_grid, text="aantal: " + movie.ft_title + ": " + str(users))
-            visitors_label.pack(padx=5, pady=20, side=tk.LEFT)
+                visitors_label = tk.Label(self.frame_movie_grid, text="aantal: " + movie[0].ft_title + ": " + str(users.count()))
+                visitors_label.pack(padx=5, pady=20, side=tk.LEFT)
 
         self.frame_overview_visitors.pack(fill="both", expand=True)
         self.label_information.pack()
         self.frame_movie_grid.pack(side=tk.TOP)
-        self.btn_back.pack(side=tk.BOTTOM)
+        # self.btn_back.pack(side=tk.BOTTOM)
 
 class ScreenOverviewMovieSupplier:
     def __init__(self, master, supplier):
