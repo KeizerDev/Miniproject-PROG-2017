@@ -372,15 +372,18 @@ class ScreenSignInVisitor:
         username = self.username.get()
         email = self.email.get()
 
-        # is_valid_email = validate_email(email)
-        # if is_valid_email and not User.selectBy(emailAddress=email).count():
-        #     new_user = User(
-        #         emailAddress=email,
-        #         name=username,
-        #         code=generate_unique_code(email + self.imdb_id)
-        #     )
-        # else:
-        #     pass
+        is_valid_email = validate_email(email)
+        if is_valid_email and not User.selectBy(emailAddress=email).count():
+            new_user = User(
+                emailAddress=email,
+                name=username
+            )
+
+            new_user.id
+            code = generate_unique_code(email + self.imdb_id)
+
+        else:
+            pass
 
         is_valid_email = validate_email(email)
         if is_valid_email and not User.selectBy(emailAddress=email).count():
@@ -398,15 +401,16 @@ class ScreenPublic:
         self.frame_public = tk.Frame(self.master, background=COLOR_RED)
         self.frame_public.pack(fill="both", expand=True)
 
-        self.label_informatie = tk.Label(self.frame_public, text="Hieronder ziet u de publieke informatie:",
+        self.label_informatie = tk.Label(self.frame_public,
+                                         text="Hieronder ziet u de publieke informatie:",
                                          foreground=COLOR_WHITE,
                                          background=COLOR_RED,
                                          height=5,
                                          font=FONT_SIZE_DEFAULT)
-        self.label_informatie.pack()
 
         self.back = BackButton(self.frame_public, command=self.show_screen_intro)
 
+        self.label_informatie.pack()
         self.back.pack(side=tk.BOTTOM)
 
     def show_screen_intro(self):
