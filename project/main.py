@@ -12,7 +12,8 @@ from thuisbioscoop.db.user import User
 from thuisbioscoop.helpers import generate_unique_code, text_to_md5
 from thuisbioscoop.helpers import get_image_path
 from thuisbioscoop.ui.back_button import BackButton
-from thuisbioscoop.ui.ui_config import COLOR_RED, FONT_SIZE_DEFAULT, COLOR_WHITE, COLOR_BLACK, COLOR_GREY, FONT_BUTTON
+from thuisbioscoop.ui.ui_config import COLOR_RED, FONT_SIZE_DEFAULT, COLOR_WHITE, COLOR_BLACK, COLOR_GREY, FONT_BUTTON, FONT_LOGIN
+
 
 
 class ScreenIntro:
@@ -84,10 +85,12 @@ class ScreenLoginSupplier:
                                       height=5,
                                       font=FONT_SIZE_DEFAULT)
 
-        self.username = tk.Entry(self.frame_login_supplier)
+        self.username = tk.Entry(self.frame_login_supplier,
+                                 font=FONT_LOGIN)
         self.username.insert(0, "Gebruikersnaam")
 
-        self.password = tk.Entry(self.frame_login_supplier)
+        self.password = tk.Entry(self.frame_login_supplier,
+                                 font=FONT_LOGIN)
         self.password.insert(0, "Wachtwoord")
 
         self.sign_in = tk.Button(self.frame_login_supplier, text="Inloggen", height=3, width=25,
