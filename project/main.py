@@ -417,7 +417,7 @@ class ScreenSignInVisitor:
         email = self.email.get()
 
         if not validate_email(email):
-            self.label_error.configure(text="Username of het e-mailadres is foutfief")
+            self.label_error.configure(text="Username of het e-mailadres is foutief")
             return
 
         if not User.selectBy(emailAddress=email).count():
@@ -439,7 +439,7 @@ class ScreenSignInVisitor:
             )
             self.show_screen_ticket_visitor(code)
         else:
-            self.label_error.configure(text="U bent al aangemeld voor deze film")
+            self.label_error.configure(text="U bent al aangemeld voor deze film", font=FONT_SIZE_DEFAULT)
             return
 
 
@@ -470,8 +470,8 @@ class ScreenTicketVisitor:
         self.label_supplier.configure(text=supplier[0].username)
 
         self.frame_ticket_visitor.pack(fill="both", expand=True)
-        self.label_code.pack()
         self.label_supplier.pack()
+        self.label_code.pack()
         self.back.pack(side=tk.BOTTOM)
 
     def show_screen_intro(self):
