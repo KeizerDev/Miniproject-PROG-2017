@@ -79,7 +79,7 @@ class ScreenLoginSupplier:
 
         self.back = BackButton(self.frame_login_supplier, command=self.show_screen_intro)
 
-        self.frame_login_supplier.pack()
+        self.frame_login_supplier.pack(fill="both", expand=True)
         self.username.pack()
         self.password.pack()
         self.sign_in.pack(side=tk.BOTTOM)
