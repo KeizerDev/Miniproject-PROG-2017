@@ -379,7 +379,7 @@ class ScreenSignInVisitor:
         email = self.email.get()
 
         if not validate_email(email):
-            self.label_error.configure(text="Username of het e-mailadres is foutfief")
+            self.label_error.configure(text="Username of het e-mailadres is foutief")
             return
 
         if not User.selectBy(emailAddress=email).count():
