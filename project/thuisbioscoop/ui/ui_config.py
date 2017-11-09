@@ -4,4 +4,4 @@ COLOR_BLACK = "#000000"
 FONT_SIZE_DEFAULT = "Arial", 30
 COLOR_GREY = "#ABABAB"
 FONT_BUTTON = "Arial",15,"bold"
-FONT_LOGIN = "Arial", 20
+FONT_LOGIN = "Arial", 15
