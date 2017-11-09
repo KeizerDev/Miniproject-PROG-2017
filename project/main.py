@@ -10,11 +10,11 @@ from thuisbioscoop.db.broadcast_time import BroadcastTime
 from thuisbioscoop.db.movie import Movie
 from thuisbioscoop.db.supplier import Supplier
 from thuisbioscoop.db.user import User
-from thuisbioscoop.helpers import generate_unique_code, text_to_md5
+from thuisbioscoop.helpers import generate_unique_code, text_to_md5, get_timestamp
 from thuisbioscoop.helpers import get_image_path
 from thuisbioscoop.ui.back_button import BackButton
-from thuisbioscoop.ui.ui_config import COLOR_RED, FONT_SIZE_DEFAULT, COLOR_WHITE, COLOR_BLACK, COLOR_GREY, FONT_BUTTON, FONT_LOGIN
-
+from thuisbioscoop.ui.ui_config import COLOR_RED, FONT_SIZE_DEFAULT, COLOR_WHITE, COLOR_BLACK, COLOR_GREY, FONT_BUTTON, \
+    FONT_LOGIN
 
 
 class ScreenIntro:
@@ -79,12 +79,12 @@ class ScreenLoginSupplier:
         self.master = master
         self.frame_login_supplier = tk.Frame(self.master, background=COLOR_RED)
 
-        self.info = tk.Label (self.frame_login_supplier,
-                                      text="Log in met uw aanbieders-account:",
-                                      foreground=COLOR_WHITE,
-                                      background=COLOR_RED,
-                                      height=5,
-                                      font=FONT_SIZE_DEFAULT)
+        self.info = tk.Label(self.frame_login_supplier,
+                             text="Log in met uw aanbieders-account:",
+                             foreground=COLOR_WHITE,
+                             background=COLOR_RED,
+                             height=5,
+                             font=FONT_SIZE_DEFAULT)
 
         self.username = tk.Entry(self.frame_login_supplier,
                                  font=FONT_LOGIN)
@@ -100,8 +100,7 @@ class ScreenLoginSupplier:
                                  foreground=COLOR_GREY,
                                  font=FONT_BUTTON)
 
-        self.back = BackButton(self.frame_login_supplier,
-                               command=self.show_screen_intro)
+        self.back = BackButton(self.frame_login_supplier, command=self.show_screen_intro)
 
         self.frame_login_supplier.pack(fill="both", expand=True)
         self.info.pack()
@@ -203,24 +202,24 @@ class ScreenOverviewMovieSupplier:
 
         self.btn_back = BackButton(self.frame_overview_movie, command=self.show_screen_intro)
 
-        ts_today = datetime.datetime.now()
-        ts_tomorrow = ts_today + datetime.timedelta(days=1)
-
+        timestamp = get_timestamp()
         movies = BroadcastTime.select(
             AND(
-                BroadcastTime.q.ft_starttime > int(ts_today.timestamp()),
-                BroadcastTime.q.ft_starttime < int(ts_tomorrow.timestamp())
+                BroadcastTime.q.ft_starttime > timestamp["today"],
+                BroadcastTime.q.ft_starttime < timestamp["tomorrow"]
             )
         )
 
         for movie in movies:
-            load = Image.open(get_image_path(movie.imdb_id))
-            render = ImageTk.PhotoImage(load)
-            # labels can be text or images
-            img = tk.Label(self.frame_movie_grid, image=render, text=movie.imdb_id)
-            img.image = render
-            img.pack(padx=5, pady=20, side=tk.LEFT)
-            img.bind('<Button-1>', self.handle_movie_click)
+            item = BroadcastSupplier.selectBy(broadcast_time_id=movie.id)
+            if not item.count():
+                load = Image.open(get_image_path(movie.imdb_id))
+                render = ImageTk.PhotoImage(load)
+                # labels can be text or images
+                img = tk.Label(self.frame_movie_grid, image=render, text=movie.imdb_id)
+                img.image = render
+                img.pack(padx=5, pady=20, side=tk.LEFT)
+                img.bind('<Button-1>', self.handle_movie_click)
 
         self.frame_overview_movie.pack(fill="both", expand=True)
         self.label_information.pack()
@@ -254,17 +253,16 @@ class ScreenOverviewMovieVisitors:
                                     background=COLOR_RED, height=5,
                                     font=FONT_SIZE_DEFAULT)
 
-        ts_today = datetime.datetime.now()
-        ts_tomorrow = ts_today + datetime.timedelta(days=1)
+        timestamp = get_timestamp()
 
-        movies = BroadcastTime.select(
+        available_movies = BroadcastTime.select(
             AND(
-                BroadcastTime.q.ft_starttime > int(ts_today.timestamp()),
-                BroadcastTime.q.ft_starttime < int(ts_tomorrow.timestamp())
+                BroadcastTime.q.ft_starttime > timestamp["today"],
+                BroadcastTime.q.ft_starttime < timestamp["tomorrow"]
             )
         )
 
-        for movie in movies:
+        for movie in available_movies:
             item = BroadcastSupplier.selectBy(broadcast_time_id=movie.id)
             print(item.count())
             if item.count():
@@ -293,7 +291,7 @@ class ScreenOverviewMovieVisitors:
         self.show_confirmation(imdb_id)
 
 
-class ScreenConfirmationSupplier():
+class ScreenConfirmationSupplier:
     def __init__(self, master, supplier, imdb_id):
         self.master = master
         self.supplier = supplier
@@ -320,13 +318,12 @@ class ScreenConfirmationSupplier():
         self.label_movie.pack()
         self.back.pack(side=tk.BOTTOM)
 
-        ts_today = datetime.datetime.now()
-        ts_tomorrow = ts_today + datetime.timedelta(days=1)
+        timestamp = get_timestamp()
 
         broadcastTime = BroadcastTime.select(
             AND(
-                BroadcastTime.q.ft_starttime > int(ts_today.timestamp()),
-                BroadcastTime.q.ft_starttime < int(ts_tomorrow.timestamp()),
+                BroadcastTime.q.ft_starttime > timestamp["today"],
+                BroadcastTime.q.ft_starttime < timestamp["tomorrow"],
                 BroadcastTime.q.imdb_id == imdb_id
             )
         )
@@ -350,9 +347,8 @@ class ScreenSignInVisitor:
 
         self.email = tk.Entry(self.frame_visitor)
         self.email.insert(0, "e-mailadres")
-        self.email.pack()
+
         self.label_error = tk.Label(self.frame_visitor, background=COLOR_RED)
-        self.label_error.pack()
 
         self.sign_in = tk.Button(self.frame_visitor,
                                  text="Inloggen", height=3, width=25,
@@ -360,9 +356,12 @@ class ScreenSignInVisitor:
                                  background=COLOR_BLACK,
                                  foreground=COLOR_GREY,
                                  font=FONT_BUTTON)
-
-        self.sign_in.pack(side=tk.BOTTOM)
         self.back = BackButton(self.frame_visitor, command=self.show_screen_intro)
+
+        self.email.pack()
+        self.username.pack()
+        self.label_error.pack()
+        self.sign_in.pack(side=tk.BOTTOM)
         self.back.pack(side=tk.BOTTOM)
 
     def show_screen_intro(self):
@@ -382,6 +381,7 @@ class ScreenSignInVisitor:
         #     )
         # else:
         #     pass
+
         is_valid_email = validate_email(email)
         if is_valid_email and not User.selectBy(emailAddress=email).count():
             User(
@@ -406,7 +406,6 @@ class ScreenPublic:
         self.label_informatie.pack()
 
         self.back = BackButton(self.frame_public, command=self.show_screen_intro)
-
 
         self.back.pack(side=tk.BOTTOM)
 
