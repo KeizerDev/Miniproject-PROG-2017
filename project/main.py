@@ -10,7 +10,7 @@ from thuisbioscoop.db.broadcast_time import BroadcastTime
 from thuisbioscoop.db.movie import Movie
 from thuisbioscoop.db.supplier import Supplier
 from thuisbioscoop.db.user import User
-from thuisbioscoop.helpers import generate_unique_code, text_to_md5
+from thuisbioscoop.helpers import generate_unique_code, text_to_md5, get_timestamp
 from thuisbioscoop.helpers import get_image_path
 from thuisbioscoop.ui.back_button import BackButton
 from thuisbioscoop.ui.ui_config import COLOR_RED, FONT_SIZE_DEFAULT, COLOR_WHITE, COLOR_BLACK, COLOR_GREY, FONT_BUTTON, \
@@ -202,13 +202,11 @@ class ScreenOverviewMovieSupplier:
 
         self.btn_back = BackButton(self.frame_overview_movie, command=self.show_screen_intro)
 
-        ts_today = datetime.datetime.now()
-        ts_tomorrow = ts_today + datetime.timedelta(days=1)
-
+        timestamp = get_timestamp()
         movies = BroadcastTime.select(
             AND(
-                BroadcastTime.q.ft_starttime > int(ts_today.timestamp()),
-                BroadcastTime.q.ft_starttime < int(ts_tomorrow.timestamp())
+                BroadcastTime.q.ft_starttime > timestamp["today"],
+                BroadcastTime.q.ft_starttime < timestamp["tomorrow"]
             )
         )
 
@@ -255,13 +253,12 @@ class ScreenOverviewMovieVisitors:
                                     background=COLOR_RED, height=5,
                                     font=FONT_SIZE_DEFAULT)
 
-        ts_today = datetime.datetime.now()
-        ts_tomorrow = ts_today + datetime.timedelta(days=1)
+        timestamp = get_timestamp()
 
         available_movies = BroadcastTime.select(
             AND(
-                BroadcastTime.q.ft_starttime > int(ts_today.timestamp()),
-                BroadcastTime.q.ft_starttime < int(ts_tomorrow.timestamp())
+                BroadcastTime.q.ft_starttime > timestamp["today"],
+                BroadcastTime.q.ft_starttime < timestamp["tomorrow"]
             )
         )
 
@@ -321,13 +318,12 @@ class ScreenConfirmationSupplier:
         self.label_movie.pack()
         self.back.pack(side=tk.BOTTOM)
 
-        ts_today = datetime.datetime.now()
-        ts_tomorrow = ts_today + datetime.timedelta(days=1)
+        timestamp = get_timestamp()
 
         broadcastTime = BroadcastTime.select(
             AND(
-                BroadcastTime.q.ft_starttime > int(ts_today.timestamp()),
-                BroadcastTime.q.ft_starttime < int(ts_tomorrow.timestamp()),
+                BroadcastTime.q.ft_starttime > timestamp["today"],
+                BroadcastTime.q.ft_starttime < timestamp["tomorrow"],
                 BroadcastTime.q.imdb_id == imdb_id
             )
         )
@@ -351,9 +347,8 @@ class ScreenSignInVisitor:
 
         self.email = tk.Entry(self.frame_visitor)
         self.email.insert(0, "e-mailadres")
-        self.email.pack()
+
         self.label_error = tk.Label(self.frame_visitor, background=COLOR_RED)
-        self.label_error.pack()
 
         self.sign_in = tk.Button(self.frame_visitor,
                                  text="Inloggen", height=3, width=25,
@@ -361,9 +356,12 @@ class ScreenSignInVisitor:
                                  background=COLOR_BLACK,
                                  foreground=COLOR_GREY,
                                  font=FONT_BUTTON)
-
-        self.sign_in.pack(side=tk.BOTTOM)
         self.back = BackButton(self.frame_visitor, command=self.show_screen_intro)
+
+        self.email.pack()
+        self.username.pack()
+        self.label_error.pack()
+        self.sign_in.pack(side=tk.BOTTOM)
         self.back.pack(side=tk.BOTTOM)
 
     def show_screen_intro(self):

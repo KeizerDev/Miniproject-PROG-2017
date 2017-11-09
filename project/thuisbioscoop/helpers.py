@@ -37,3 +37,13 @@ def generate_unique_code(str):
 
 def get_current_date():
     return datetime.datetime.now().strftime('%d-%m-%Y')
+
+
+def get_timestamp():
+    ts_today = datetime.datetime.now()
+    ts_tomorrow = ts_today + datetime.timedelta(days=1)
+
+    return {
+        "today": int(ts_today.timestamp()),
+        "tomorrow": int(ts_tomorrow.timestamp())
+    }
