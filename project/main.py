@@ -68,6 +68,12 @@ class ScreenLoginSupplier:
         self.master = master
         self.frame_login_supplier = tk.Frame(self.master, background=COLOR_RED)
 
+        self.info = tk.Label (self.frame_login_supplier,
+                                      text="Log in met uw aanbieders-account:",
+                                      foreground=COLOR_WHITE,
+                                      background=COLOR_RED,
+                                      height=5,
+                                      font=FONT_SIZE_DEFAULT)
         self.username = tk.Entry(self.frame_login_supplier)
         self.username.insert(0, "Gebruikersnaam")
 
@@ -80,9 +86,10 @@ class ScreenLoginSupplier:
         self.back = BackButton(self.frame_login_supplier, command=self.show_screen_intro)
 
         self.frame_login_supplier.pack(fill="both", expand=True)
+        self.info.pack()
         self.username.pack()
         self.password.pack()
-        self.sign_in.pack(side=tk.BOTTOM)
+        self.sign_in.pack(pady=20)
         self.back.pack(side=tk.BOTTOM)
 
     def show_screen_intro(self):
