@@ -5,6 +5,7 @@ from PIL import ImageTk, Image
 from sqlobject import AND
 from validate_email import validate_email
 
+from thuisbioscoop.db.broadcast_supplier import BroadcastSupplier
 from thuisbioscoop.db.broadcast_time import BroadcastTime
 from thuisbioscoop.db.movie import Movie
 from thuisbioscoop.db.supplier import Supplier
@@ -128,7 +129,7 @@ class ScreenLoginSupplier:
             self.show_screen_start_supplier(get_supplier[0])
 
 
-class ScreenStartSupplier():
+class ScreenStartSupplier:
     def __init__(self, master, supplier):
         self.master = master
         self.supplier = supplier
@@ -198,7 +199,6 @@ class ScreenOverviewMovieSupplier:
 
         self.frame_movie_grid = tk.Frame(self.frame_overview_movie,
                                          background=COLOR_RED)
-
         self.btn_confirmation = tk.Button(self.frame_overview_movie,
                                           text="Bevestig keuze",
                                           command=self.show_confirmation,
@@ -212,17 +212,13 @@ class ScreenOverviewMovieSupplier:
                                    foreground=COLOR_GREY,
                                    font=FONT_BUTTON)
 
-        ts = datetime.datetime.now()
-
-        ts = datetime.datetime.now()
-        tst = ts + datetime.timedelta(days=1)
-        print(tst)
-        print(ts)
+        ts_today = datetime.datetime.now()
+        ts_tomorrow = ts_today + datetime.timedelta(days=1)
 
         movies = BroadcastTime.select(
             AND(
-                BroadcastTime.q.ft_starttime > int(ts.timestamp()),
-                BroadcastTime.q.ft_starttime < int(tst.timestamp())
+                BroadcastTime.q.ft_starttime > int(ts_today.timestamp()),
+                BroadcastTime.q.ft_starttime < int(ts_tomorrow.timestamp())
             )
         )
 
@@ -238,7 +234,6 @@ class ScreenOverviewMovieSupplier:
         self.frame_overview_movie.pack(fill="both", expand=True)
         self.label_information.pack()
         self.frame_movie_grid.pack(side=tk.TOP)
-        self.btn_confirmation.pack(side=tk.BOTTOM)
         self.btn_back.pack(side=tk.BOTTOM)
 
     def show_screen_intro(self):
@@ -254,7 +249,7 @@ class ScreenOverviewMovieSupplier:
         self.show_confirmation(imdb_id)
 
 
-class ScreenOverviewMovieVisitors():
+class ScreenOverviewMovieVisitors:
     def __init__(self, master):
         self.master = master
         self.frame_overview_visitors = tk.Frame(self.master, background=COLOR_RED)
@@ -271,25 +266,27 @@ class ScreenOverviewMovieVisitors():
                                     background=COLOR_RED, height=5,
                                     font=FONT_SIZE_DEFAULT)
 
-        ts = datetime.datetime.now()
-        tst = datetime.datetime.now() + datetime.timedelta(days=1)
-        print(tst)
+        ts_today = datetime.datetime.now()
+        ts_tomorrow = ts_today + datetime.timedelta(days=1)
 
         movies = BroadcastTime.select(
             AND(
-                BroadcastTime.q.ft_starttime > ts.strftime("%s"),
-                BroadcastTime.q.ft_starttime < tst.strftime("%s"),
+                BroadcastTime.q.ft_starttime > int(ts_today.timestamp()),
+                BroadcastTime.q.ft_starttime < int(ts_tomorrow.timestamp())
             )
         )
 
         for movie in movies:
-            load = Image.open(get_image_path(movie.imdb_id))
-            render = ImageTk.PhotoImage(load)
-            # labels can be text or images
-            img = tk.Label(self.frame_movie_grid, image=render, text=movie.imdb_id)
-            img.image = render
-            img.pack(padx=5, pady=20, side=tk.LEFT)
-            img.bind('<Button-1>', self.handle_movie_click)
+            item = BroadcastSupplier.selectBy(broadcast_time_id=movie.id)
+            print(item.count())
+            if item.count():
+                load = Image.open(get_image_path(movie.imdb_id))
+                render = ImageTk.PhotoImage(load)
+                # labels can be text or images
+                img = tk.Label(self.frame_movie_grid, image=render, text=movie.imdb_id)
+                img.image = render
+                img.pack(padx=5, pady=20, side=tk.LEFT)
+                img.bind('<Button-1>', self.handle_movie_click)
 
         self.frame_movie_grid.pack()
         self.information.pack()
@@ -299,8 +296,9 @@ class ScreenOverviewMovieVisitors():
         self.frame_overview_visitors.pack_forget()
         ScreenIntro(self.master)
 
-    def show_confirmation(self):
+    def show_confirmation(self, imdb_id):
         self.frame_overview_visitors.pack_forget()
+        ScreenSignInVisitor(self.master, imdb_id)
 
     def handle_movie_click(self, event):
         imdb_id = event.widget.cget("text")
@@ -337,20 +335,33 @@ class ScreenConfirmationSupplier():
         self.label_movie.pack()
         self.back.pack(side=tk.BOTTOM)
 
+        ts_today = datetime.datetime.now()
+        ts_tomorrow = ts_today + datetime.timedelta(days=1)
+
+        broadcastTime = BroadcastTime.select(
+            AND(
+                BroadcastTime.q.ft_starttime > int(ts_today.timestamp()),
+                BroadcastTime.q.ft_starttime < int(ts_tomorrow.timestamp()),
+                BroadcastTime.q.imdb_id == imdb_id
+            )
+        )
+        print(broadcastTime[0])
+        BroadcastSupplier(broadcast_time_id=broadcastTime[0].id, supplier_id=self.supplier.id)
+
     def show_screen_intro(self):
         self.frame_confirmation.pack_forget()
         ScreenIntro(self.master)
 
 
-class Screen:
-    def __init__(self, master):
+class ScreenSignInVisitor:
+    def __init__(self, master, imdb_id):
         self.master = master
+        self.imdb_id = imdb_id
         self.frame_visitor = tk.Frame(self.master, background=COLOR_RED)
         self.frame_visitor.pack(fill="both", expand=True)
 
         self.username = tk.Entry(self.frame_visitor)
         self.username.insert(0, "Gebruikersnaam")
-        self.username.pack()
 
         self.email = tk.Entry(self.frame_visitor)
         self.email.insert(0, "e-mailadres")
@@ -378,6 +389,15 @@ class Screen:
         username = self.username.get()
         email = self.email.get()
 
+        # is_valid_email = validate_email(email)
+        # if is_valid_email and not User.selectBy(emailAddress=email).count():
+        #     new_user = User(
+        #         emailAddress=email,
+        #         name=username,
+        #         code=generate_unique_code(email + self.imdb_id)
+        #     )
+        # else:
+        #     pass
         is_valid_email = validate_email(email)
         if is_valid_email and not User.selectBy(emailAddress=email).count():
             User(
