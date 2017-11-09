@@ -347,7 +347,7 @@ class ScreenSignInVisitor:
 
         self.email = tk.Entry(self.frame_visitor,
                               font=FONT_LOGIN)
-        self.email.insert(0, "e-mailadres")
+        self.email.insert(0, "E-mailadres")
 
         self.label_error = tk.Label(self.frame_visitor, background=COLOR_RED)
 
