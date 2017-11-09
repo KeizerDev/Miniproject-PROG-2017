@@ -9,7 +9,7 @@ from thuisbioscoop.db.broadcast_time import BroadcastTime
 from thuisbioscoop.db.movie import Movie
 from thuisbioscoop.db.supplier import Supplier
 from thuisbioscoop.db.user import User
-from thuisbioscoop.helpers import generate_unique_code, is_valid_email, text_to_md5
+from thuisbioscoop.helpers import generate_unique_code, text_to_md5
 from thuisbioscoop.helpers import get_image_path
 from thuisbioscoop.ui.back_button import BackButton
 from thuisbioscoop.ui.ui_config import COLOR_RED, FONT_SIZE_DEFAULT, COLOR_WHITE
