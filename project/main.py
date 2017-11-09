@@ -175,8 +175,8 @@ class ScreenOverviewMovieSupplier:
 
         movies = BroadcastTime.select(
             AND(
-                BroadcastTime.q.ft_starttime > ts.strftime("%s"),
-                BroadcastTime.q.ft_starttime < tst.strftime("%s"),
+                BroadcastTime.q.ft_starttime > ts.strftime("%T"),
+                BroadcastTime.q.ft_starttime < tst.strftime("%T"),
             )
         )
 
