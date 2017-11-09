@@ -13,7 +13,8 @@ from thuisbioscoop.db.user import User
 from thuisbioscoop.helpers import generate_unique_code, text_to_md5
 from thuisbioscoop.helpers import get_image_path
 from thuisbioscoop.ui.back_button import BackButton
-from thuisbioscoop.ui.ui_config import COLOR_RED, FONT_SIZE_DEFAULT, COLOR_WHITE
+from thuisbioscoop.ui.ui_config import COLOR_RED, FONT_SIZE_DEFAULT, COLOR_WHITE, COLOR_BLACK, COLOR_GREY, FONT_BUTTON, FONT_LOGIN
+
 
 
 class ScreenIntro:
@@ -28,22 +29,31 @@ class ScreenIntro:
                                       font=FONT_SIZE_DEFAULT)
 
         self.button_supplier = tk.Button(self.frame_start,
-                                         text="Ik ben aanbieder",
+                                         text="Aanbieder",
                                          height=3,
                                          width=25,
-                                         command=self.show_screen_supplier)
+                                         command=self.show_screen_supplier,
+                                         background=COLOR_BLACK,
+                                         foreground=COLOR_GREY,
+                                         font=FONT_BUTTON)
 
         self.button_visitor = tk.Button(self.frame_start,
-                                        text="Ik ben bezoeker",
+                                        text="Bezoeker",
                                         height=3,
                                         width=25,
-                                        command=self.show_screen_visitor)
+                                        command=self.show_screen_visitor,
+                                        background=COLOR_BLACK,
+                                        foreground=COLOR_GREY,
+                                        font=FONT_BUTTON)
 
         self.button_public = tk.Button(self.frame_start,
-                                       text="Ik wil publieke informatie zien",
+                                       text="Overzicht",
                                        height=3,
                                        width=25,
-                                       command=self.show_screen_public)
+                                       command=self.show_screen_public,
+                                       background=COLOR_BLACK,
+                                       foreground=COLOR_GREY,
+                                       font=FONT_BUTTON)
 
         self.frame_start.pack(fill="both", expand=True)
         self.label_welcome.pack()
@@ -69,21 +79,38 @@ class ScreenLoginSupplier:
         self.master = master
         self.frame_login_supplier = tk.Frame(self.master, background=COLOR_RED)
 
-        self.username = tk.Entry(self.frame_login_supplier)
+        self.info = tk.Label (self.frame_login_supplier,
+                                      text="Log in met uw aanbieders-account:",
+                                      foreground=COLOR_WHITE,
+                                      background=COLOR_RED,
+                                      height=5,
+                                      font=FONT_SIZE_DEFAULT)
+
+        self.username = tk.Entry(self.frame_login_supplier,
+                                 font=FONT_LOGIN)
         self.username.insert(0, "Gebruikersnaam")
 
-        self.password = tk.Entry(self.frame_login_supplier)
+        self.password = tk.Entry(self.frame_login_supplier,
+                                 font=FONT_LOGIN)
         self.password.insert(0, "Wachtwoord")
 
         self.sign_in = tk.Button(self.frame_login_supplier, text="Inloggen", height=3, width=25,
-                                 command=self.do_sign_in)
+                                 command=self.do_sign_in,
+                                 background=COLOR_BLACK,
+                                 foreground=COLOR_GREY,
+                                 font=FONT_BUTTON)
 
-        self.back = BackButton(self.frame_login_supplier, command=self.show_screen_intro)
+        self.back = BackButton(self.frame_login_supplier,
+                               command=self.show_screen_intro,
+                               background = COLOR_BLACK,
+                               foreground = COLOR_GREY,
+                               font=FONT_BUTTON)
 
         self.frame_login_supplier.pack(fill="both", expand=True)
+        self.info.pack()
         self.username.pack()
         self.password.pack()
-        self.sign_in.pack(side=tk.BOTTOM)
+        self.sign_in.pack(pady=20)
         self.back.pack(side=tk.BOTTOM)
 
     def show_screen_intro(self):
@@ -119,16 +146,25 @@ class ScreenStartSupplier:
                                         text="Films die u kunt aanbieden",
                                         height=3,
                                         width=35,
-                                        command=self.show_screen_overview_supplier)
+                                        command=self.show_screen_overview_supplier,
+                                        background=COLOR_BLACK,
+                                        foreground=COLOR_GREY,
+                                        font=FONT_BUTTON)
 
         self.codes_of_visitors = tk.Button(self.frame_supplier,
                                            text="Bezoekers die een kaartje hebben gekocht",
                                            height=3,
                                            width=35,
-                                           command=self.show_screen_overview_visitors)
+                                           command=self.show_screen_overview_visitors,
+                                           background=COLOR_BLACK,
+                                           foreground=COLOR_GREY,
+                                           font=FONT_BUTTON)
 
-        self.back = BackButton(self.frame_supplier, command=self.show_screen_intro)
-
+        self.back = BackButton(self.frame_supplier,
+                               command=self.show_screen_intro,
+                               background=COLOR_BLACK,
+                               foreground=COLOR_GREY,
+                               font=FONT_BUTTON)
         self.frame_supplier.pack(fill="both", expand=True)
         self.label_keuze.pack()
         self.suppliedMovies.pack()
@@ -163,8 +199,18 @@ class ScreenOverviewMovieSupplier:
 
         self.frame_movie_grid = tk.Frame(self.frame_overview_movie,
                                          background=COLOR_RED)
+        self.btn_confirmation = tk.Button(self.frame_overview_movie,
+                                          text="Bevestig keuze",
+                                          command=self.show_confirmation,
+                                          height=3,
+                                          width=25,
+                                          background=COLOR_BLACK,
+                                          foreground=COLOR_GREY)
 
-        self.btn_back = BackButton(self.frame_overview_movie, command=self.show_screen_intro)
+        self.btn_back = BackButton(self.frame_overview_movie, command=self.show_screen_intro,
+                                   background=COLOR_BLACK,
+                                   foreground=COLOR_GREY,
+                                   font=FONT_BUTTON)
 
         ts_today = datetime.datetime.now()
         ts_tomorrow = ts_today + datetime.timedelta(days=1)
@@ -211,10 +257,14 @@ class ScreenOverviewMovieVisitors:
 
         self.frame_movie_grid = tk.Frame(self.frame_overview_visitors,
                                          background=COLOR_RED)
-        self.back = BackButton(self.frame_overview_visitors, command=self.show_screen_intro)
+        self.back = BackButton(self.frame_overview_visitors, command=self.show_screen_intro,
+                               background=COLOR_BLACK,
+                               foreground=COLOR_GREY,
+                               font=FONT_BUTTON)
         self.information = tk.Label(self.frame_overview_visitors, text="Hieronder ziet u de tickets die verkocht zijn:",
                                     foreground=COLOR_WHITE,
-                                    background=COLOR_RED, height=5, font=FONT_SIZE_DEFAULT)
+                                    background=COLOR_RED, height=5,
+                                    font=FONT_SIZE_DEFAULT)
 
         ts_today = datetime.datetime.now()
         ts_tomorrow = ts_today + datetime.timedelta(days=1)
@@ -271,9 +321,14 @@ class ScreenConfirmationSupplier():
 
         self.label_movie = tk.Label(self.frame_confirmation, text=self.movie.ft_title,
                                     foreground=COLOR_WHITE,
-                                    background=COLOR_RED, height=5, font=FONT_SIZE_DEFAULT)
+                                    background=COLOR_RED,
+                                    height=5,
+                                    font=FONT_SIZE_DEFAULT)
 
-        self.back = BackButton(self.frame_confirmation, command=self.show_screen_intro)
+        self.back = BackButton(self.frame_confirmation, command=self.show_screen_intro,
+                               background=COLOR_BLACK,
+                               foreground=COLOR_GREY,
+                               font=FONT_BUTTON)
 
         self.frame_confirmation.pack(fill="both", expand=True)
         self.label_confirmation.pack()
@@ -310,15 +365,20 @@ class ScreenSignInVisitor:
 
         self.email = tk.Entry(self.frame_visitor)
         self.email.insert(0, "e-mailadres")
-
-        self.sign_in = tk.Button(self.frame_visitor, text="Inloggen", height=3, width=25,
-                                 command=self.do_sign_in)
-
-        self.back = BackButton(self.frame_visitor, command=self.show_screen_intro)
-
-        self.username.pack()
         self.email.pack()
+        self.label_error = tk.Label(self.frame_visitor, background=COLOR_RED)
+        self.label_error.pack()
+
+        self.sign_in = tk.Button(self.frame_visitor,
+                                 text="Inloggen", height=3, width=25,
+                                 command=self.do_sign_in,
+                                 background=COLOR_BLACK,
+                                 foreground=COLOR_GREY,
+                                 font=FONT_BUTTON)
+
         self.sign_in.pack(side=tk.BOTTOM)
+        self.back = BackButton(self.frame_visitor, command=self.show_screen_intro, background=COLOR_BLACK,
+                                         foreground=COLOR_GREY)
         self.back.pack(side=tk.BOTTOM)
 
     def show_screen_intro(self):
@@ -338,6 +398,14 @@ class ScreenSignInVisitor:
         #     )
         # else:
         #     pass
+        is_valid_email = validate_email(email)
+        if is_valid_email and not User.selectBy(emailAddress=email).count():
+            User(
+                emailAddress=email,
+                name=username,
+                code=generate_unique_code(email))
+        else:
+            self.label_error.configure(text="Username of het e-mailadres is foutfief")
 
 
 class ScreenPublic:
@@ -348,11 +416,17 @@ class ScreenPublic:
 
         self.label_informatie = tk.Label(self.frame_public, text="Hieronder ziet u de publieke informatie:",
                                          foreground=COLOR_WHITE,
-                                         background=COLOR_RED, height=5, font=FONT_SIZE_DEFAULT)
-
-        self.back = BackButton(self.frame_public, command=self.show_screen_intro)
-
+                                         background=COLOR_RED,
+                                         height=5,
+                                         font=FONT_SIZE_DEFAULT)
         self.label_informatie.pack()
+
+        self.back = BackButton(self.frame_public,
+                               command=self.show_screen_intro,
+                               background=COLOR_BLACK,
+                               foreground=COLOR_GREY,
+                               font=FONT_BUTTON)
+
         self.back.pack(side=tk.BOTTOM)
 
     def show_screen_intro(self):
