@@ -194,7 +194,8 @@ class ScreenOverviewVisitors:
         self.frame_movie_grid = tk.Frame(self.frame_overview_visitors,
                                          background=COLOR_RED)
 
-        # self.btn_back = BackButton(self.frame_overview_visitors, command=self.show_screen_start_supplier)
+        self.btn_back = BackButton(self.frame_overview_visitors,
+                                   command=self.show_screen_start_supplier)
 
         timestamp = get_timestamp()
         broadcast_times = BroadcastTime.select(
@@ -216,7 +217,11 @@ class ScreenOverviewVisitors:
         self.frame_overview_visitors.pack(fill="both", expand=True)
         self.label_information.pack()
         self.frame_movie_grid.pack(side=tk.TOP)
-        # self.btn_back.pack(side=tk.BOTTOM)
+        self.btn_back.pack(side=tk.BOTTOM)
+
+    def show_screen_start_supplier(self):
+        self.frame_overview_visitors.pack_forget()
+        ScreenStartSupplier(self.master, self.supplier)
 
 class ScreenOverviewMovieSupplier:
     def __init__(self, master, supplier):
