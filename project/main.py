@@ -13,8 +13,8 @@ from thuisbioscoop.db.user import User
 from thuisbioscoop.helpers import generate_unique_code, text_to_md5
 from thuisbioscoop.helpers import get_image_path
 from thuisbioscoop.ui.back_button import BackButton
-from thuisbioscoop.ui.ui_config import COLOR_RED, FONT_SIZE_DEFAULT, COLOR_WHITE, COLOR_BLACK, COLOR_GREY, FONT_BUTTON, FONT_LOGIN
-
+from thuisbioscoop.ui.ui_config import COLOR_RED, FONT_SIZE_DEFAULT, COLOR_WHITE, COLOR_BLACK, COLOR_GREY, FONT_BUTTON, \
+    FONT_LOGIN
 
 
 class ScreenIntro:
@@ -79,12 +79,12 @@ class ScreenLoginSupplier:
         self.master = master
         self.frame_login_supplier = tk.Frame(self.master, background=COLOR_RED)
 
-        self.info = tk.Label (self.frame_login_supplier,
-                                      text="Log in met uw aanbieders-account:",
-                                      foreground=COLOR_WHITE,
-                                      background=COLOR_RED,
-                                      height=5,
-                                      font=FONT_SIZE_DEFAULT)
+        self.info = tk.Label(self.frame_login_supplier,
+                             text="Log in met uw aanbieders-account:",
+                             foreground=COLOR_WHITE,
+                             background=COLOR_RED,
+                             height=5,
+                             font=FONT_SIZE_DEFAULT)
 
         self.username = tk.Entry(self.frame_login_supplier,
                                  font=FONT_LOGIN)
@@ -102,8 +102,8 @@ class ScreenLoginSupplier:
 
         self.back = BackButton(self.frame_login_supplier,
                                command=self.show_screen_intro,
-                               background = COLOR_BLACK,
-                               foreground = COLOR_GREY,
+                               background=COLOR_BLACK,
+                               foreground=COLOR_GREY,
                                font=FONT_BUTTON)
 
         self.frame_login_supplier.pack(fill="both", expand=True)
@@ -165,6 +165,7 @@ class ScreenStartSupplier:
                                background=COLOR_BLACK,
                                foreground=COLOR_GREY,
                                font=FONT_BUTTON)
+
         self.frame_supplier.pack(fill="both", expand=True)
         self.label_keuze.pack()
         self.suppliedMovies.pack()
@@ -269,14 +270,14 @@ class ScreenOverviewMovieVisitors:
         ts_today = datetime.datetime.now()
         ts_tomorrow = ts_today + datetime.timedelta(days=1)
 
-        movies = BroadcastTime.select(
+        available_movies = BroadcastTime.select(
             AND(
                 BroadcastTime.q.ft_starttime > int(ts_today.timestamp()),
                 BroadcastTime.q.ft_starttime < int(ts_tomorrow.timestamp())
             )
         )
 
-        for movie in movies:
+        for movie in available_movies:
             item = BroadcastSupplier.selectBy(broadcast_time_id=movie.id)
             print(item.count())
             if item.count():
@@ -305,7 +306,7 @@ class ScreenOverviewMovieVisitors:
         self.show_confirmation(imdb_id)
 
 
-class ScreenConfirmationSupplier():
+class ScreenConfirmationSupplier:
     def __init__(self, master, supplier, imdb_id):
         self.master = master
         self.supplier = supplier
@@ -378,7 +379,7 @@ class ScreenSignInVisitor:
 
         self.sign_in.pack(side=tk.BOTTOM)
         self.back = BackButton(self.frame_visitor, command=self.show_screen_intro, background=COLOR_BLACK,
-                                         foreground=COLOR_GREY)
+                               foreground=COLOR_GREY)
         self.back.pack(side=tk.BOTTOM)
 
     def show_screen_intro(self):
@@ -398,6 +399,7 @@ class ScreenSignInVisitor:
         #     )
         # else:
         #     pass
+
         is_valid_email = validate_email(email)
         if is_valid_email and not User.selectBy(emailAddress=email).count():
             User(
