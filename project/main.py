@@ -214,10 +214,6 @@ class ScreenOverviewVisitors():
         self.frame_overview_visitors = tk.Frame(self.master, background=COLOR_RED)
         self.frame_overview_visitors.pack(fill="both", expand=True)
 
-        self.confirmation = tk.Button(self.frame_overview_visitors, text="Bevestig keuze",
-                                      command=self.show_confirmation, height=3, width=25)
-        self.confirmation.pack(side=tk.BOTTOM)
-
         self.back = BackButton(self.frame_overview_visitors, command=self.show_screen_intro)
         self.information = tk.Label(self.frame_overview_visitors, text="Hieronder ziet u de tickets die verkocht zijn:",
                                     foreground=COLOR_WHITE,
