@@ -36,14 +36,4 @@ def generate_unique_code(str):
 
 
 def get_current_date():
-    return f"{datetime.now():%d-%m-%Y}"
-
-
-def is_valid_email(email):
-    is_valid = False
-    regex_email = r'\b[\w.-]+?@\w+?\.\w+?\b'
-    regex_results = re.findall(regex_email, email)
-    if regex_results[0]:
-        is_valid = True
-
-    return is_valid
+    return datetime.datetime.now().strftime('%d-%m-%Y')
