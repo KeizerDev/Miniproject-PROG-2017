@@ -24,8 +24,7 @@ class ScreenIntro:
                                       foreground=COLOR_WHITE,
                                       background=COLOR_RED,
                                       height=5,
-                                      font=FONT_SIZE_DEFAULT
-                                      )
+                                      font=FONT_SIZE_DEFAULT)
 
         self.button_supplier = tk.Button(self.frame_start,
                                          text="Aanbieder",
@@ -52,8 +51,7 @@ class ScreenIntro:
                                        command=self.show_screen_public,
                                        background=COLOR_BLACK,
                                        foreground=COLOR_GREY,
-                                       font=FONT_BUTTON
-                                       )
+                                       font=FONT_BUTTON)
 
         self.frame_start.pack(fill="both", expand=True)
         self.label_welcome.pack()
@@ -147,8 +145,7 @@ class ScreenStartSupplier():
                                         command=self.show_screen_overview_supplier,
                                         background=COLOR_BLACK,
                                         foreground=COLOR_GREY,
-                                        font=FONT_BUTTON
-                                        )
+                                        font=FONT_BUTTON)
 
         self.codes_of_visitors = tk.Button(self.frame_supplier,
                                            text="Bezoekers die een kaartje hebben gekocht",
@@ -157,8 +154,7 @@ class ScreenStartSupplier():
                                            command=self.show_screen_overview_visitors,
                                            background=COLOR_BLACK,
                                            foreground=COLOR_GREY,
-                                           font=FONT_BUTTON
-                                           )
+                                           font=FONT_BUTTON)
 
         self.back = BackButton(self.frame_supplier,
                                command=self.show_screen_intro,
@@ -206,14 +202,12 @@ class ScreenOverviewMovieSupplier:
                                           height=3,
                                           width=25,
                                           background=COLOR_BLACK,
-                                          foreground=COLOR_GREY
-                                          )
+                                          foreground=COLOR_GREY)
 
         self.btn_back = BackButton(self.frame_overview_movie, command=self.show_screen_intro,
                                    background=COLOR_BLACK,
                                    foreground=COLOR_GREY,
-                                   font=FONT_BUTTON
-                                   )
+                                   font=FONT_BUTTON)
 
         ts = datetime.datetime.now()
 
@@ -268,13 +262,11 @@ class ScreenOverviewMovieVisitors():
         self.back = BackButton(self.frame_overview_visitors, command=self.show_screen_intro,
                                background=COLOR_BLACK,
                                foreground=COLOR_GREY,
-                               font=FONT_BUTTON
-                               )
+                               font=FONT_BUTTON)
         self.information = tk.Label(self.frame_overview_visitors, text="Hieronder ziet u de tickets die verkocht zijn:",
                                     foreground=COLOR_WHITE,
                                     background=COLOR_RED, height=5,
-                                    font=FONT_SIZE_DEFAULT
-                                    )
+                                    font=FONT_SIZE_DEFAULT)
 
         ts = datetime.datetime.now()
         tst = datetime.datetime.now() + datetime.timedelta(days=1)
@@ -335,8 +327,7 @@ class ScreenConfirmationSupplier():
         self.back = BackButton(self.frame_confirmation, command=self.show_screen_intro,
                                background=COLOR_BLACK,
                                foreground=COLOR_GREY,
-                               font=FONT_BUTTON
-                               )
+                               font=FONT_BUTTON)
 
         self.frame_confirmation.pack(fill="both", expand=True)
         self.label_confirmation.pack()
@@ -389,8 +380,7 @@ class Screen:
             User(
                 emailAddress=email,
                 name=username,
-                code=generate_unique_code(email)
-            )
+                code=generate_unique_code(email))
         else:
             self.label_error.configure(text="Username of het e-mailadres is foutfief")
 
