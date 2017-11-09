@@ -305,11 +305,12 @@ class Screen:
         self.email = tk.Entry(self.frame_visitor)
         self.email.insert(0, "e-mailadres")
         self.email.pack()
+        self.label_error = tk.Label(self.frame_visitor, background=COLOR_RED)
+        self.label_error.pack()
 
         self.sign_in = tk.Button(self.frame_visitor, text="Inloggen", height=3, width=25,
                                  command=self.do_sign_in)
         self.sign_in.pack(side=tk.BOTTOM)
-
         self.back = BackButton(self.frame_visitor, command=self.show_screen_intro)
         self.back.pack(side=tk.BOTTOM)
 
@@ -329,8 +330,7 @@ class Screen:
                 code=generate_unique_code(email)
             )
         else:
-
-            pass
+            self.label_error.configure(text="Username of het e-mailadres is foutfief")
 
 
 class ScreenPublic:
