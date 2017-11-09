@@ -395,7 +395,7 @@ class ScreenSignInVisitor:
                                  background=COLOR_BLACK,
                                  foreground=COLOR_GREY,
                                  font=FONT_BUTTON)
-        self.back = BackButton(self.frame_visitor, command=self.show_screen_intro)
+        self.back = BackButton(self.frame_visitor, command=self.show_screen_overviw_movie_visitor)
 
         self.information.pack()
         self.frame_visitor.pack(fill="both", expand=True)
@@ -405,9 +405,9 @@ class ScreenSignInVisitor:
         self.sign_in.pack(side=tk.BOTTOM)
         self.back.pack(side=tk.BOTTOM)
 
-    def show_screen_intro(self):
+    def show_screen_overviw_movie_visitor(self):
         self.frame_visitor.pack_forget()
-        ScreenIntro(self.master)
+        ScreenOverviewMovieVisitors(self.master)
 
     def show_screen_ticket_visitor(self, code):
         self.frame_visitor.pack_forget()
