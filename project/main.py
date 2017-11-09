@@ -79,7 +79,7 @@ class ScreenLoginSupplier:
 
         self.back = BackButton(self.frame_login_supplier, command=self.show_screen_intro)
 
-        self.frame_login_supplier.pack()
+        self.frame_login_supplier.pack(fill="both", expand=True)
         self.username.pack()
         self.password.pack()
         self.sign_in.pack(side=tk.BOTTOM)
@@ -175,8 +175,8 @@ class ScreenOverviewMovieSupplier:
 
         movies = BroadcastTime.select(
             AND(
-                BroadcastTime.q.ft_starttime > ts.strftime("%s"),
-                BroadcastTime.q.ft_starttime < tst.strftime("%s"),
+                BroadcastTime.q.ft_starttime > ts.strftime("%t"),
+                BroadcastTime.q.ft_starttime < tst.strftime("%t"),
             )
         )
 
