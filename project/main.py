@@ -401,7 +401,7 @@ class ScreenSignInVisitor:
             )
             self.show_screen_ticket_visitor(code)
         else:
-            self.label_error.configure(text="U bent al aangemeld voor deze film")
+            self.label_error.configure(text="U bent al aangemeld voor deze film", font=FONT_SIZE_DEFAULT)
             return
 
 class ScreenTicketVisitor:
@@ -431,8 +431,8 @@ class ScreenTicketVisitor:
         self.label_supplier.configure(text=supplier[0].username)
 
         self.frame_ticket_visitor.pack(fill="both", expand=True)
-        self.label_code.pack()
         self.label_supplier.pack()
+        self.label_code.pack()
         self.back.pack(side=tk.BOTTOM)
 
     def show_screen_intro(self):
