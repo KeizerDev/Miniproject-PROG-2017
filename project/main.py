@@ -451,15 +451,23 @@ class ScreenTicketVisitor:
         self.broadcast_supplier_id = broadcast_supplier_id
 
         self.frame_ticket_visitor = tk.Frame(self.master, background=COLOR_RED)
-        self.label_code = tk.Label(self.frame_ticket_visitor,
-                                   text=self.code,
+        self.frame_ticket=tk.Frame(self.frame_ticket_visitor, background=COLOR_BLACK)
+        self.label_text = tk.Label(self.frame_ticket_visitor,
+                                    text="Hieronder ziet u uw ticket:",
+                                    foreground=COLOR_WHITE,
+                                    background=COLOR_RED,
+                                    height=5,
+                                    font=FONT_SIZE_DEFAULT
+                                    )
+        self.label_code = tk.Label(self.frame_ticket,
+                                   text="Code: " + self.code,
                                    foreground=COLOR_WHITE,
-                                   background=COLOR_RED,
+                                   background=COLOR_BLACK,
                                    height=5,
                                    font=FONT_SIZE_DEFAULT)
-        self.label_supplier = tk.Label(self.frame_ticket_visitor,
+        self.label_supplier = tk.Label(self.frame_ticket,
                                        foreground=COLOR_WHITE,
-                                       background=COLOR_RED,
+                                       background=COLOR_BLACK,
                                        height=5,
                                        font=FONT_SIZE_DEFAULT)
 
@@ -468,9 +476,11 @@ class ScreenTicketVisitor:
         broadcast_supplier = BroadcastSupplier.selectBy(id=self.broadcast_supplier_id)
         supplier = Supplier.selectBy(id=broadcast_supplier[0].supplier_id)
 
-        self.label_supplier.configure(text=supplier[0].username)
+        self.label_supplier.configure(text="Aanbieder : " + supplier[0].username)
 
+        self.label_text.pack()
         self.frame_ticket_visitor.pack(fill="both", expand=True)
+        self.frame_ticket.pack()
         self.label_supplier.pack()
         self.label_code.pack()
         self.back.pack(side=tk.BOTTOM)
