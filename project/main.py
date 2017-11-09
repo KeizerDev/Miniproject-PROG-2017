@@ -335,11 +335,18 @@ class ScreenSignInVisitor:
         self.broadcast_supplier_id = broadcast_supplier_id
         self.frame_visitor = tk.Frame(self.master, background=COLOR_RED)
 
-        self.username = tk.Entry(self.frame_visitor)
+        self.information = tk.Label(self.frame_visitor, text="Vul een hier uw gegevens in om een kaartje te krijgen:",
+                                    foreground=COLOR_WHITE,
+                                    background=COLOR_RED, height=5,
+                                    font=FONT_SIZE_DEFAULT)
+
+        self.username = tk.Entry(self.frame_visitor,
+                                 font=FONT_LOGIN)
         self.username.insert(0, "Gebruikersnaam")
 
-        self.email = tk.Entry(self.frame_visitor)
-        self.email.insert(0, "e-mailadres")
+        self.email = tk.Entry(self.frame_visitor,
+                              font=FONT_LOGIN)
+        self.email.insert(0, "E-mailadres")
 
         self.label_error = tk.Label(self.frame_visitor, background=COLOR_RED)
 
@@ -351,6 +358,7 @@ class ScreenSignInVisitor:
                                  font=FONT_BUTTON)
         self.back = BackButton(self.frame_visitor, command=self.show_screen_intro)
 
+        self.information.pack()
         self.frame_visitor.pack(fill="both", expand=True)
         self.email.pack()
         self.username.pack()
