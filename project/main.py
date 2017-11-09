@@ -193,15 +193,8 @@ class ScreenOverviewMovieSupplier:
 
         self.frame_movie_grid = tk.Frame(self.frame_overview_movie,
                                          background=COLOR_RED)
-        self.btn_confirmation = tk.Button(self.frame_overview_movie,
-                                          text="Bevestig keuze",
-                                          command=self.show_confirmation,
-                                          height=3,
-                                          width=25,
-                                          background=COLOR_BLACK,
-                                          foreground=COLOR_GREY)
 
-        self.btn_back = BackButton(self.frame_overview_movie, command=self.show_screen_intro)
+        self.btn_back = BackButton(self.frame_overview_movie, command=self.show_screen_start_supplier)
 
         timestamp = get_timestamp()
         movies = BroadcastTime.select(
@@ -227,9 +220,9 @@ class ScreenOverviewMovieSupplier:
         self.frame_movie_grid.pack(side=tk.TOP)
         self.btn_back.pack(side=tk.BOTTOM)
 
-    def show_screen_intro(self):
+    def show_screen_start_supplier(self):
         self.frame_overview_movie.pack_forget()
-        ScreenIntro(self.master)
+        ScreenStartSupplier(self.master, self.supplier)
 
     def show_confirmation(self, imdb_id):
         self.frame_overview_movie.pack_forget()
