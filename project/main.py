@@ -3,6 +3,7 @@ import tkinter as tk
 
 from PIL import ImageTk, Image
 from sqlobject import AND
+from validate_email import validate_email
 
 from thuisbioscoop.db.broadcast_time import BroadcastTime
 from thuisbioscoop.db.movie import Movie
@@ -290,16 +291,18 @@ class ScreenStartVisitor:
         ScreenIntro(self.master)
 
     def do_sign_in(self):
-        # @TODO: Validate email
         username = self.username.get()
         email = self.email.get()
-        if is_valid_email(email) and not User.selectBy(emailAddress=email).count():
+
+        is_valid_email = validate_email(email)
+        if is_valid_email and not User.selectBy(emailAddress=email).count():
             User(
                 emailAddress=email,
                 name=username,
                 code=generate_unique_code(email)
             )
         else:
+            
             pass
 
 
