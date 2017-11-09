@@ -28,7 +28,7 @@ class ScreenIntro:
                                       )
 
         self.button_supplier = tk.Button(self.frame_start,
-                                         text="Ik ben aanbieder",
+                                         text="Aanbieder",
                                          height=3,
                                          width=25,
                                          command=self.show_screen_supplier,
@@ -37,7 +37,7 @@ class ScreenIntro:
                                          font=FONT_BUTTON)
 
         self.button_visitor = tk.Button(self.frame_start,
-                                        text="Ik ben bezoeker",
+                                        text="Bezoeker",
                                         height=3,
                                         width=25,
                                         command=self.show_screen_visitor,
@@ -46,7 +46,7 @@ class ScreenIntro:
                                         font=FONT_BUTTON)
 
         self.button_public = tk.Button(self.frame_start,
-                                       text="Ik wil publieke informatie zien",
+                                       text="Overzicht",
                                        height=3,
                                        width=25,
                                        command=self.show_screen_public,
