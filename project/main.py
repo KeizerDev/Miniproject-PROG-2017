@@ -276,8 +276,8 @@ class ScreenOverviewMovieVisitors:
                 img.pack(padx=5, pady=20, side=tk.LEFT)
                 img.bind('<Button-1>', self.handle_movie_click)
 
+        self.information.pack(side=tk.TOP)
         self.frame_movie_grid.pack()
-        self.information.pack()
         self.back.pack(side=tk.BOTTOM)
 
     def show_screen_intro(self):
