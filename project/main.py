@@ -176,8 +176,46 @@ class ScreenStartSupplier:
 
     def show_screen_overview_visitors(self):
         self.frame_supplier.pack_forget()
-        ScreenOverviewMovieVisitors(self.master)
+        ScreenOverviewVisitors(self.master, self.supplier)
 
+class ScreenOverviewVisitors:
+    def __init__(self, master, supplier):
+        self.master = master
+        self.supplier = supplier
+
+        self.frame_overview_visitors = tk.Frame(self.master, background=COLOR_RED)
+        self.label_information = tk.Label(self.frame_overview_visitors,
+                                          text="Hieronder ziet u het aantal bezoekers:",
+                                          foreground=COLOR_WHITE,
+                                          background=COLOR_RED,
+                                          height=5,
+                                          font=FONT_SIZE_DEFAULT)
+
+        self.frame_movie_grid = tk.Frame(self.frame_overview_visitors,
+                                         background=COLOR_RED)
+
+        self.btn_back = BackButton(self.frame_overview_visitors, command=self.show_screen_start_supplier)
+
+        timestamp = get_timestamp()
+        movies = BroadcastTime.select(
+            AND(
+                BroadcastTime.q.ft_starttime > timestamp["today"],
+                BroadcastTime.q.ft_starttime < timestamp["tomorrow"]
+            )
+        )
+
+        for movie in movies:
+            item = BroadcastSupplier.selectBy(broadcast_time_id=movie.id)
+
+            users = UserBroadcastSupplier.selectBy(broadcast_supplier_id=item[0].id)
+
+            visitors_label = tk.Label(self.frame_movie_grid, text="aantal: " + movie.ft_title + ": " + str(users))
+            visitors_label.pack(padx=5, pady=20, side=tk.LEFT)
+
+        self.frame_overview_visitors.pack(fill="both", expand=True)
+        self.label_information.pack()
+        self.frame_movie_grid.pack(side=tk.TOP)
+        self.btn_back.pack(side=tk.BOTTOM)
 
 class ScreenOverviewMovieSupplier:
     def __init__(self, master, supplier):
@@ -403,6 +441,7 @@ class ScreenSignInVisitor:
         else:
             self.label_error.configure(text="U bent al aangemeld voor deze film")
             return
+
 
 class ScreenTicketVisitor:
     def __init__(self, master, code, broadcast_supplier_id):
