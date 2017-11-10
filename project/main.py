@@ -396,7 +396,7 @@ class ScreenConfirmationSupplier:
                                     height=5,
                                     font=FONT_SIZE_DEFAULT)
 
-        self.back = BackButton(self.frame_confirmation, command=self.show_screen_intro)
+        self.back = BackButton(self.frame_confirmation, command=self.show_screen_start_supplier)
 
         timestamp = get_timestamp()
 
@@ -415,10 +415,10 @@ class ScreenConfirmationSupplier:
         self.label_movie.pack()
         self.back.pack(side=tk.BOTTOM)
 
-    def show_screen_intro(self):
+    def show_screen_start_supplier(self):
         """functie voor de terug knop naar het intro scherm van suppliers"""
         self.frame_confirmation.pack_forget()
-        ScreenIntro(self.master)
+        ScreenStartSupplier(self.master, self.supplier)
 
 
 class ScreenSignInVisitor:
