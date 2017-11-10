@@ -574,18 +574,19 @@ class ScreenPublic:
                 BroadcastTime.q.ft_starttime < timestamp["tomorrow"]
             )
         )
-
-        for movie in available_movies:
-            broadcast_supplier = BroadcastSupplier.selectBy(broadcast_time_id=movie.id)
+        total_visitors = 0
+        for available_movie in available_movies:
+            broadcast_supplier = BroadcastSupplier.selectBy(broadcast_time_id=available_movie.id)
 
             if broadcast_supplier.count():
+                movie = Movie.selectBy(imdb_id=available_movie.imdb_id)
                 supplier = Supplier.selectBy(id=broadcast_supplier[0].supplier_id)
                 number_of_users = UserBroadcastSupplier.selectBy(broadcast_supplier_id=broadcast_supplier[0].id).count()
-
+                total_visitors += number_of_users
                 frame_item = tk.Frame(self.frame_movie_overview, background=COLOR_RED)
 
                 # labels can be text or images
-                label_movie = tk.Label(frame_item, text=label_user_number_text)
+                label_movie = tk.Label(frame_item, text=movie[0].ft_title)
                 label_movie.pack(padx=5, pady=20, side=tk.LEFT)
 
                 # labels can be text or images
@@ -595,6 +596,9 @@ class ScreenPublic:
                 label_user_number.pack(padx=5, pady=20, side=tk.LEFT)
 
                 frame_item.pack()
+
+        self.total_visitors_label = tk.Label(self.frame_movie_overview, text=total_visitors, background=COLOR_RED, font=FONT_SIZE_DEFAULT)
+        self.total_visitors_label.pack()
 
         self.frame_public.pack(fill="both", expand=True)
         self.label_informatie.pack()
