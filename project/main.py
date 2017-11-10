@@ -214,6 +214,18 @@ class ScreenOverviewVisitors:
                 visitors_label = tk.Label(self.frame_movie_grid, text="aantal: " + movie[0].ft_title + ": " + str(users.count()))
                 visitors_label.pack(padx=5, pady=20, side=tk.LEFT)
 
+                user_list = tk.Text(self.frame_movie_grid)
+                user_list.pack(padx=5, pady=40, side=tk.LEFT)
+
+                for user in users:
+                    user_obj = User.selectBy(id=user.user_id)
+
+                    user_str = user_obj[0].name+" met code:\n "+user.code + "\n"
+                    user_list.insert(tk.END, user_str)
+
+
+                    
+
         self.frame_overview_visitors.pack(fill="both", expand=True)
         self.label_information.pack()
         self.frame_movie_grid.pack(side=tk.TOP)
@@ -506,6 +518,39 @@ class ScreenPublic:
                                          height=5,
                                          font=FONT_SIZE_DEFAULT)
         self.back = BackButton(self.frame_public, command=self.show_screen_intro)
+
+        timestamp = get_timestamp()
+
+        available_movies = BroadcastTime.select(
+            AND(
+                BroadcastTime.q.ft_starttime > timestamp["today"],
+                BroadcastTime.q.ft_starttime < timestamp["tomorrow"]
+            )
+        )
+        
+
+        print(available_movies)
+        for movie in available_movies:
+            broadcast_supplier = BroadcastSupplier.selectBy(broadcast_time_id=movie.id)
+            
+            movie_thing = Movie.selectBy(imdb_id=movie.imdb_id)
+
+
+            if broadcast_supplier.count():
+                supplier = Supplier.selectBy(id=broadcast_supplier[0].supplier_id)
+                number_of_users = UserBroadcastSupplier.selectBy(broadcast_supplier_id=broadcast_supplier[0].id).count()
+                load = Image.open(get_image_path(movie.imdb_id))
+                render = ImageTk.PhotoImage(load)
+
+                # labels can be text or images
+
+                label_user_number = tk.Label(self.frame_public, text=str(number_of_users)+" bezoeker(s) aangeboden door "+ supplier[0].username)
+                label_user_number.pack(padx=5, pady=20, side=tk.LEFT)
+
+                img = tk.Label(self.frame_public, image=render, text=label_user_number)
+                img.image = render
+                img.pack(padx=5, pady=40, side=tk.LEFT)
+
 
         self.frame_public.pack(fill="both", expand=True)
         self.label_informatie.pack()
