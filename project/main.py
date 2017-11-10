@@ -298,7 +298,7 @@ class ScreenOverviewMovieVisitors:
         self.frame_movie_grid = tk.Frame(self.frame_overview_visitors,
                                          background=COLOR_RED)
         self.back = BackButton(self.frame_overview_visitors, command=self.show_screen_intro)
-        self.information = tk.Label(self.frame_overview_visitors, text="Hieronder ziet u de tickets die verkocht zijn:",
+        self.information = tk.Label(self.frame_overview_visitors, text="Hieronder ziet u de films die beschikbaar zijn:",
                                     foreground=COLOR_WHITE,
                                     background=COLOR_RED, height=5,
                                     font=FONT_SIZE_DEFAULT)
