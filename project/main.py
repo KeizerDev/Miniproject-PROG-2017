@@ -20,6 +20,7 @@ from thuisbioscoop.ui.ui_config import COLOR_RED, FONT_SIZE_DEFAULT, COLOR_WHITE
 
 class ScreenIntro:
     """Class voor het intro scherm"""
+
     def __init__(self, master):
         self.master = master
         self.frame_start = tk.Frame(master, background=COLOR_RED)
@@ -81,6 +82,7 @@ class ScreenIntro:
 
 class ScreenLoginSupplier:
     """Class voor het login supplier scherm"""
+
     def __init__(self, master):
         self.master = master
         self.frame_login_supplier = tk.Frame(self.master, background=COLOR_RED)
@@ -136,6 +138,7 @@ class ScreenLoginSupplier:
 
 class ScreenStartSupplier:
     """Class voor het supplier start scherm"""
+
     def __init__(self, master, supplier):
         self.master = master
         self.supplier = supplier
@@ -190,8 +193,10 @@ class ScreenStartSupplier:
         self.frame_supplier.pack_forget()
         ScreenOverviewVisitors(self.master, self.supplier)
 
+
 class ScreenOverviewVisitors:
     """Class voor het scherm met alle gebruikers die naar een film gaan van een supplier"""
+
     def __init__(self, master, supplier):
         self.master = master
         self.supplier = supplier
@@ -224,7 +229,8 @@ class ScreenOverviewVisitors:
             if broadcast_supplier.count():
                 users = UserBroadcastSupplier.selectBy(broadcast_supplier_id=broadcast_supplier[0].id)
 
-                visitors_label = tk.Label(self.frame_movie_grid, text="aantal: " + movie[0].ft_title + ": " + str(users.count()))
+                visitors_label = tk.Label(self.frame_movie_grid,
+                                          text="aantal: " + movie[0].ft_title + ": " + str(users.count()))
                 visitors_label.pack(padx=5, pady=20, side=tk.LEFT)
 
                 user_list = tk.Text(self.frame_movie_grid)
@@ -233,11 +239,8 @@ class ScreenOverviewVisitors:
                 for user in users:
                     user_obj = User.selectBy(id=user.user_id)
 
-                    user_str = user_obj[0].name+" met code:\n "+user.code + "\n"
+                    user_str = user_obj[0].name + " met code:\n " + user.code + "\n"
                     user_list.insert(tk.END, user_str)
-
-
-                    
 
         self.frame_overview_visitors.pack(fill="both", expand=True)
         self.label_information.pack()
@@ -249,8 +252,10 @@ class ScreenOverviewVisitors:
         self.frame_overview_visitors.pack_forget()
         ScreenStartSupplier(self.master, self.supplier)
 
+
 class ScreenOverviewMovieSupplier:
     """Class voor de suppliers overzicht om de mogelijke films die aangeboden worden te kiezen"""
+
     def __init__(self, master, supplier):
         self.master = master
         self.supplier = supplier
@@ -310,6 +315,7 @@ class ScreenOverviewMovieSupplier:
 
 class ScreenOverviewMovieVisitors:
     """Class voor het overzicht voor bezoekers welke films zij kunnen bekijken"""
+
     def __init__(self, master):
         self.master = master
         self.frame_overview_visitors = tk.Frame(self.master, background=COLOR_RED)
@@ -317,7 +323,8 @@ class ScreenOverviewMovieVisitors:
         self.frame_movie_grid = tk.Frame(self.frame_overview_visitors,
                                          background=COLOR_RED)
         self.back = BackButton(self.frame_overview_visitors, command=self.show_screen_intro)
-        self.information = tk.Label(self.frame_overview_visitors, text="Hieronder ziet u de films die beschikbaar zijn:",
+        self.information = tk.Label(self.frame_overview_visitors,
+                                    text="Hieronder ziet u de films die beschikbaar zijn:",
                                     foreground=COLOR_WHITE,
                                     background=COLOR_RED, height=5,
                                     font=FONT_SIZE_DEFAULT)
@@ -365,6 +372,7 @@ class ScreenOverviewMovieVisitors:
 
 class ScreenConfirmationSupplier:
     """Class voor de bevestiging van een gekozen film door een supplier"""
+
     def __init__(self, master, supplier, imdb_id):
         self.master = master
         self.supplier = supplier
@@ -411,6 +419,7 @@ class ScreenConfirmationSupplier:
 
 class ScreenSignInVisitor:
     """Class voor het registreren van een kijken"""
+
     def __init__(self, master, broadcast_supplier_id):
         self.master = master
         self.broadcast_supplier_id = broadcast_supplier_id
@@ -491,20 +500,21 @@ class ScreenSignInVisitor:
 
 class ScreenTicketVisitor:
     """class voor het scherm waarbij een kijker zijn code krijgt voor de film die hij/zij heeft gekozen"""
+
     def __init__(self, master, code, broadcast_supplier_id):
         self.master = master
         self.code = code
         self.broadcast_supplier_id = broadcast_supplier_id
 
         self.frame_ticket_visitor = tk.Frame(self.master, background=COLOR_RED)
-        self.frame_ticket=tk.Frame(self.frame_ticket_visitor, background=COLOR_BLACK, borderwidth=30)
+        self.frame_ticket = tk.Frame(self.frame_ticket_visitor, background=COLOR_BLACK, borderwidth=30)
         self.label_text = tk.Label(self.frame_ticket_visitor,
-                                    text="Hieronder ziet u uw ticket:",
-                                    foreground=COLOR_WHITE,
-                                    background=COLOR_RED,
-                                    height=5,
-                                    font=FONT_SIZE_DEFAULT
-                                    )
+                                   text="Hieronder ziet u uw ticket:",
+                                   foreground=COLOR_WHITE,
+                                   background=COLOR_RED,
+                                   height=5,
+                                   font=FONT_SIZE_DEFAULT
+                                   )
         self.label_code = tk.Label(self.frame_ticket,
                                    text="Code: " + self.code,
                                    foreground=COLOR_WHITE,
@@ -539,6 +549,7 @@ class ScreenTicketVisitor:
 
 class ScreenPublic:
     """Class voor het scherm van publieke informatie"""
+
     def __init__(self, master):
         self.master = master
         self.frame_public = tk.Frame(self.master, background=COLOR_RED)
@@ -548,6 +559,7 @@ class ScreenPublic:
                                          background=COLOR_RED,
                                          height=5,
                                          font=FONT_SIZE_DEFAULT)
+        self.frame_movie_overview = tk.Frame(self.frame_public, background=COLOR_RED)
         self.back = BackButton(self.frame_public, command=self.show_screen_intro)
 
         timestamp = get_timestamp()
@@ -558,33 +570,31 @@ class ScreenPublic:
                 BroadcastTime.q.ft_starttime < timestamp["tomorrow"]
             )
         )
-        
 
-        print(available_movies)
         for movie in available_movies:
             broadcast_supplier = BroadcastSupplier.selectBy(broadcast_time_id=movie.id)
-            
-            movie_thing = Movie.selectBy(imdb_id=movie.imdb_id)
-
 
             if broadcast_supplier.count():
                 supplier = Supplier.selectBy(id=broadcast_supplier[0].supplier_id)
                 number_of_users = UserBroadcastSupplier.selectBy(broadcast_supplier_id=broadcast_supplier[0].id).count()
-                load = Image.open(get_image_path(movie.imdb_id))
-                render = ImageTk.PhotoImage(load)
+
+                frame_item = tk.Frame(self.frame_movie_overview, background=COLOR_RED)
 
                 # labels can be text or images
-
-                label_user_number = tk.Label(self.frame_public, text=str(number_of_users)+" bezoeker(s) aangeboden door "+ supplier[0].username)
+                label_user_number_text = "%s bezoeker(s) aangeboden door %s" % (str(number_of_users), supplier[0].username)
+                label_user_number = tk.Label(frame_item, text=label_user_number_text)
                 label_user_number.pack(padx=5, pady=20, side=tk.LEFT)
 
-                img = tk.Label(self.frame_public, image=render, text=label_user_number)
-                img.image = render
-                img.pack(padx=5, pady=40, side=tk.LEFT)
+                # labels can be text or images
+                label_user_number_text = "%s bezoeker(s) aangeboden door %s" % (str(number_of_users), supplier[0].username)
+                label_user_number = tk.Label(frame_item, text=label_user_number_text)
+                label_user_number.pack(padx=5, pady=20, side=tk.LEFT)
 
+                frame_item.pack()
 
         self.frame_public.pack(fill="both", expand=True)
         self.label_informatie.pack()
+        self.frame_movie_overview.pack()
         self.back.pack(side=tk.BOTTOM)
 
     def show_screen_intro(self):
@@ -595,6 +605,7 @@ class ScreenPublic:
 
 class MainApplication(tk.Frame):
     """Class voor het hoofdprogramma"""
+
     def __init__(self, parent, *args, **kwargs):
         tk.Frame.__init__(self, parent, *args, **kwargs)
         self.screen_intro = ScreenIntro(self)
