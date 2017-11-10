@@ -19,6 +19,7 @@ from thuisbioscoop.ui.ui_config import COLOR_RED, FONT_SIZE_DEFAULT, COLOR_WHITE
 
 
 class ScreenIntro:
+    """Class voor het intro scherm"""
     def __init__(self, master):
         self.master = master
         self.frame_start = tk.Frame(master, background=COLOR_RED)
@@ -63,19 +64,23 @@ class ScreenIntro:
         self.button_public.pack()
 
     def show_screen_supplier(self):
+        """functie om scherm supplier te laten zien"""
         self.frame_start.pack_forget()
         ScreenLoginSupplier(self.master)
 
     def show_screen_visitor(self):
+        """functie om scherm bezoeker te laten zien"""
         self.frame_start.pack_forget()
         ScreenOverviewMovieVisitors(self.master)
 
     def show_screen_public(self):
+        """functie om scherm publiek te laten zien"""
         self.frame_start.pack_forget()
         ScreenPublic(self.master)
 
 
 class ScreenLoginSupplier:
+    """Class voor het login supplier scherm"""
     def __init__(self, master):
         self.master = master
         self.frame_login_supplier = tk.Frame(self.master, background=COLOR_RED)
@@ -111,14 +116,17 @@ class ScreenLoginSupplier:
         self.back.pack(side=tk.BOTTOM)
 
     def show_screen_intro(self):
+        """functie om scherm intro supplier te laten zien"""
         self.frame_login_supplier.pack_forget()
         ScreenIntro(self.master)
 
     def show_screen_start_supplier(self, supplier):
+        """functie om scherm start supplier te laten zien"""
         self.frame_login_supplier.pack_forget()
         ScreenStartSupplier(self.master, supplier)
 
     def do_sign_in(self):
+        """functie om login voor de suppliers te doen"""
         text_username = self.username.get()
         md5_password = text_to_md5(self.password.get())
         get_supplier = Supplier.selectBy(username=text_username, password=md5_password)
@@ -127,6 +135,7 @@ class ScreenLoginSupplier:
 
 
 class ScreenStartSupplier:
+    """Class voor het supplier start scherm"""
     def __init__(self, master, supplier):
         self.master = master
         self.supplier = supplier
@@ -167,18 +176,22 @@ class ScreenStartSupplier:
         self.back.pack(side=tk.BOTTOM)
 
     def show_screen_intro(self):
+        """functie om scherm intro supplier te laten zien"""
         self.frame_supplier.pack_forget()
         ScreenIntro(self.master)
 
     def show_screen_overview_supplier(self):
+        """functie om het overzicht scherm van een supplier te laten zien, specifiek welke films hij kan aanbieden"""
         self.frame_supplier.pack_forget()
         ScreenOverviewMovieSupplier(self.master, self.supplier)
 
     def show_screen_overview_visitors(self):
+        """functie om het overzicht van gebruikers met hun codes weer te geven"""
         self.frame_supplier.pack_forget()
         ScreenOverviewVisitors(self.master, self.supplier)
 
 class ScreenOverviewVisitors:
+    """Class voor het scherm met alle gebruikers die naar een film gaan van een supplier"""
     def __init__(self, master, supplier):
         self.master = master
         self.supplier = supplier
@@ -232,10 +245,12 @@ class ScreenOverviewVisitors:
         self.btn_back.pack(side=tk.BOTTOM)
 
     def show_screen_start_supplier(self):
+        """functie om terug te gaan naar het start scherm voor suppliers"""
         self.frame_overview_visitors.pack_forget()
         ScreenStartSupplier(self.master, self.supplier)
 
 class ScreenOverviewMovieSupplier:
+    """Class voor de suppliers overzicht om de mogelijke films die aangeboden worden te kiezen"""
     def __init__(self, master, supplier):
         self.master = master
         self.supplier = supplier
@@ -278,19 +293,23 @@ class ScreenOverviewMovieSupplier:
         self.btn_back.pack(side=tk.BOTTOM)
 
     def show_screen_start_supplier(self):
+        """functie om naar het start scherm van suppliers te gaan"""
         self.frame_overview_movie.pack_forget()
         ScreenStartSupplier(self.master, self.supplier)
 
     def show_confirmation(self, imdb_id):
+        """functie om naar het bevestigings scherm van een gekozen film te gaan"""
         self.frame_overview_movie.pack_forget()
         ScreenConfirmationSupplier(self.master, self.supplier, imdb_id)
 
     def handle_movie_click(self, event):
+        """functie om een filmkeuze af te handelen"""
         imdb_id = event.widget.cget("text")
         self.show_confirmation(imdb_id)
 
 
 class ScreenOverviewMovieVisitors:
+    """Class voor het overzicht voor bezoekers welke films zij kunnen bekijken"""
     def __init__(self, master):
         self.master = master
         self.frame_overview_visitors = tk.Frame(self.master, background=COLOR_RED)
@@ -329,19 +348,23 @@ class ScreenOverviewMovieVisitors:
         self.back.pack(side=tk.BOTTOM)
 
     def show_screen_intro(self):
+        """functie om naar het intro scherm te gaan"""
         self.frame_overview_visitors.pack_forget()
         ScreenIntro(self.master)
 
     def show_confirmation(self, broadcast_supplier_id):
+        """functie om naar het bevestigingscherm te gaan"""
         self.frame_overview_visitors.pack_forget()
         ScreenSignInVisitor(self.master, broadcast_supplier_id)
 
     def handle_movie_click(self, event):
+        """functie om de klik op een film af te handelen"""
         broadcast_supplier_id = event.widget.cget("text")
         self.show_confirmation(broadcast_supplier_id)
 
 
 class ScreenConfirmationSupplier:
+    """Class voor de bevestiging van een gekozen film door een supplier"""
     def __init__(self, master, supplier, imdb_id):
         self.master = master
         self.supplier = supplier
@@ -381,11 +404,13 @@ class ScreenConfirmationSupplier:
         self.back.pack(side=tk.BOTTOM)
 
     def show_screen_intro(self):
+        """functie voor de terug knop naar het intro scherm van suppliers"""
         self.frame_confirmation.pack_forget()
         ScreenIntro(self.master)
 
 
 class ScreenSignInVisitor:
+    """Class voor het registreren van een kijken"""
     def __init__(self, master, broadcast_supplier_id):
         self.master = master
         self.broadcast_supplier_id = broadcast_supplier_id
@@ -423,14 +448,17 @@ class ScreenSignInVisitor:
         self.back.pack(side=tk.BOTTOM)
 
     def show_screen_overviw_movie_visitor(self):
+        """functie voor het weergeven van het overzicht scherm van films voor de kijker"""
         self.frame_visitor.pack_forget()
         ScreenOverviewMovieVisitors(self.master)
 
     def show_screen_ticket_visitor(self, code):
+        """functie voor het weergeven van het bevestigings scherm voor de kijker"""
         self.frame_visitor.pack_forget()
         ScreenTicketVisitor(self.master, code, str(self.broadcast_supplier_id))
 
     def do_sign_in(self):
+        """functie voor het registreren van een kijker"""
         username = self.username.get()
         email = self.email.get()
 
@@ -462,6 +490,7 @@ class ScreenSignInVisitor:
 
 
 class ScreenTicketVisitor:
+    """class voor het scherm waarbij een kijker zijn code krijgt voor de film die hij/zij heeft gekozen"""
     def __init__(self, master, code, broadcast_supplier_id):
         self.master = master
         self.code = code
@@ -503,11 +532,13 @@ class ScreenTicketVisitor:
         self.back.pack(side=tk.BOTTOM)
 
     def show_screen_intro(self):
+        """functie voor het weergeven van het introscherm voor kijkers"""
         self.frame_ticket_visitor.pack_forget()
         ScreenIntro(self.master)
 
 
 class ScreenPublic:
+    """Class voor het scherm van publieke informatie"""
     def __init__(self, master):
         self.master = master
         self.frame_public = tk.Frame(self.master, background=COLOR_RED)
@@ -557,11 +588,13 @@ class ScreenPublic:
         self.back.pack(side=tk.BOTTOM)
 
     def show_screen_intro(self):
+        """functie voor het weergeven van het startscherm"""
         self.frame_public.pack_forget()
         ScreenIntro(self.master)
 
 
 class MainApplication(tk.Frame):
+    """Class voor het hoofdprogramma"""
     def __init__(self, parent, *args, **kwargs):
         tk.Frame.__init__(self, parent, *args, **kwargs)
         self.screen_intro = ScreenIntro(self)
