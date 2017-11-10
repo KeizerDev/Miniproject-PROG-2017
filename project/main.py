@@ -5,14 +5,16 @@ from PIL import ImageTk, Image
 from sqlobject import AND
 from validate_email import validate_email
 
+from thuisbioscoop.config import FT_API_KEY
 from thuisbioscoop.db.broadcast_supplier import BroadcastSupplier
 from thuisbioscoop.db.broadcast_time import BroadcastTime
+from thuisbioscoop.db.database import get_broadcast_times_of_today
 from thuisbioscoop.db.movie import Movie
 from thuisbioscoop.db.supplier import Supplier
 from thuisbioscoop.db.user import User
 from thuisbioscoop.db.user_broadcast_supplier import UserBroadcastSupplier
-from thuisbioscoop.helpers import generate_unique_code, text_to_md5, get_timestamp
-from thuisbioscoop.helpers import get_image_path
+from thuisbioscoop.helpers import generate_unique_code, text_to_md5, get_timestamp, get_current_date, get_image_path
+from thuisbioscoop.api.ft_handler import FtHandler
 from thuisbioscoop.ui.back_button import BackButton
 from thuisbioscoop.ui.ui_config import COLOR_RED, FONT_SIZE_DEFAULT, COLOR_WHITE, COLOR_BLACK, COLOR_GREY, FONT_BUTTON, \
     FONT_LOGIN, FONT_OVERVIEW
@@ -23,6 +25,10 @@ class ScreenIntro:
 
     def __init__(self, master):
         self.master = master
+
+        ft_handler = FtHandler(FT_API_KEY, get_current_date())
+        ft_handler.fetch_movies()
+
         self.frame_start = tk.Frame(master, background=COLOR_RED)
         self.label_welcome = tk.Label(self.frame_start,
                                       text="Welkom, maak uw keuze:",
@@ -215,21 +221,26 @@ class ScreenOverviewVisitors:
         self.btn_back = BackButton(self.frame_overview_visitors,
                                    command=self.show_screen_start_supplier)
 
-        timestamp = get_timestamp()
-        broadcast_times = BroadcastTime.select(
-            AND(
-                BroadcastTime.q.ft_starttime > timestamp["today"],
-                BroadcastTime.q.ft_starttime < timestamp["tomorrow"]
-            )
-        )
+        self.handle_data()
 
+        self.frame_overview_visitors.pack(fill="both", expand=True)
+        self.label_information.pack()
+        self.frame_movie_grid
+
+        self.btn_back.pack(side=tk.BOTTOM)
+
+    def show_screen_start_supplier(self):
+        """functie om terug te gaan naar het start scherm voor suppliers"""
+        self.frame_overview_visitors.pack_forget()
+        ScreenStartSupplier(self.master, self.supplier)
+
+    def handle_data(self):
+        broadcast_times = get_broadcast_times_of_today()
         for broadcast_time in broadcast_times:
-            broadcast_supplier = BroadcastSupplier.select(
-                AND(
-                    BroadcastSupplier.q.broadcast_time_id == broadcast_time.id,
-                    BroadcastSupplier.q.supplier_id == self.supplier.id,
-                ))
+            broadcast_supplier = BroadcastSupplier.selectBy(broadcast_time_id=broadcast_time.id,
+                                                            supplier_id=self.supplier.id)
             movie = Movie.selectBy(imdb_id=broadcast_time.imdb_id)
+
             if broadcast_supplier.count():
                 users = UserBroadcastSupplier.selectBy(broadcast_supplier_id=broadcast_supplier[0].id)
 
@@ -245,16 +256,6 @@ class ScreenOverviewVisitors:
 
                     user_str = user_obj[0].name + " met code:\n " + user.code + "\n"
                     user_list.insert(tk.END, user_str)
-
-        self.frame_overview_visitors.pack(fill="both", expand=True)
-        self.label_information.pack()
-        self.frame_movie_grid.pack(side=tk.TOP)
-        self.btn_back.pack(side=tk.BOTTOM)
-
-    def show_screen_start_supplier(self):
-        """functie om terug te gaan naar het start scherm voor suppliers"""
-        self.frame_overview_visitors.pack_forget()
-        ScreenStartSupplier(self.master, self.supplier)
 
 
 class ScreenOverviewMovieSupplier:
@@ -566,14 +567,8 @@ class ScreenPublic:
         self.frame_movie_overview = tk.Frame(self.frame_public, background=COLOR_RED)
         self.back = BackButton(self.frame_public, command=self.show_screen_intro)
 
-        timestamp = get_timestamp()
+        available_movies = get_broadcast_times_of_today()
 
-        available_movies = BroadcastTime.select(
-            AND(
-                BroadcastTime.q.ft_starttime > timestamp["today"],
-                BroadcastTime.q.ft_starttime < timestamp["tomorrow"]
-            )
-        )
         total_visitors = 0
         for available_movie in available_movies:
             broadcast_supplier = BroadcastSupplier.selectBy(broadcast_time_id=available_movie.id)
@@ -586,18 +581,22 @@ class ScreenPublic:
                 frame_item = tk.Frame(self.frame_movie_overview, background=COLOR_RED)
 
                 # labels can be text or images
-                label_movie = tk.Label(frame_item, text="De film " + movie[0].ft_title, background=COLOR_RED, foreground=COLOR_WHITE, font=FONT_OVERVIEW)
+                label_movie = tk.Label(frame_item, text="De film " + movie[0].ft_title, background=COLOR_RED,
+                                       foreground=COLOR_WHITE, font=FONT_OVERVIEW)
                 label_movie.pack(padx=5, pady=20, side=tk.LEFT)
 
                 # labels can be text or images
                 label_user_number_text = "wordt bezocht door %s bezoeker(s) en de film wordt aangeboden door %s." % (
-                str(number_of_users), supplier[0].username)
-                label_user_number = tk.Label(frame_item, text=label_user_number_text, background=COLOR_RED, foreground=COLOR_WHITE, font=FONT_OVERVIEW)
+                    str(number_of_users), supplier[0].username)
+                label_user_number = tk.Label(frame_item, text=label_user_number_text, background=COLOR_RED,
+                                             foreground=COLOR_WHITE, font=FONT_OVERVIEW)
                 label_user_number.pack(pady=20, side=tk.LEFT)
 
                 frame_item.pack()
 
-        self.total_visitors_label = tk.Label(self.frame_movie_overview, text="Totaal aantal bezoekers: " + str(total_visitors), background=COLOR_RED, foreground=COLOR_WHITE,
+        self.total_visitors_label = tk.Label(self.frame_movie_overview,
+                                             text="Totaal aantal bezoekers: " + str(total_visitors),
+                                             background=COLOR_RED, foreground=COLOR_WHITE,
                                              font=FONT_OVERVIEW)
         self.total_visitors_label.pack()
 

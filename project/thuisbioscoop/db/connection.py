@@ -1,3 +1,5 @@
 from sqlobject.sqlite import builder
 
-conn = builder()('data/thuisbioscoop.db')
+from thuisbioscoop.config import DB_LOCATION
+
+conn = builder()(DB_LOCATION)

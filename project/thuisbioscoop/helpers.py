@@ -4,12 +4,12 @@ import os
 import re
 import urllib.request
 
-DOWNLOAD_LOCATION = "data/images/%s.jpg"
+from thuisbioscoop.config import IMG_DOWNLOAD_LOCATION
 
 
 def download_image(url, imdb_id):
     """functie voor het downloaden van de film foto's"""
-    store_location = DOWNLOAD_LOCATION % imdb_id
+    store_location = IMG_DOWNLOAD_LOCATION % imdb_id
 
     if not os.path.isfile(store_location):
         response = urllib.request.urlopen(url).read()
@@ -20,7 +20,7 @@ def download_image(url, imdb_id):
 
 def get_image_path(imdb_id):
     """functie voor het download image path"""
-    return DOWNLOAD_LOCATION % imdb_id
+    return IMG_DOWNLOAD_LOCATION % imdb_id
 
 
 def ft_url_builder(key, date):
