@@ -15,7 +15,7 @@ from thuisbioscoop.helpers import generate_unique_code, text_to_md5, get_timesta
 from thuisbioscoop.helpers import get_image_path
 from thuisbioscoop.ui.back_button import BackButton
 from thuisbioscoop.ui.ui_config import COLOR_RED, FONT_SIZE_DEFAULT, COLOR_WHITE, COLOR_BLACK, COLOR_GREY, FONT_BUTTON, \
-    FONT_LOGIN
+    FONT_LOGIN, FONT_OVERVIEW, FONT_VISITOR_OVERVIEW
 
 
 class ScreenIntro:
@@ -233,12 +233,16 @@ class ScreenOverviewVisitors:
             if broadcast_supplier.count():
                 users = UserBroadcastSupplier.selectBy(broadcast_supplier_id=broadcast_supplier[0].id)
 
+                label_text_movie = "Film: %s \n Aantal: %s" %(movie[0].ft_title, str(users.count()))
                 visitors_label = tk.Label(self.frame_movie_grid,
-                                          text="aantal: " + movie[0].ft_title + ": " + str(users.count()))
+                                          text=label_text_movie,
+                                          background=COLOR_RED,
+                                          foreground=COLOR_WHITE,
+                                          font=FONT_VISITOR_OVERVIEW)
                 visitors_label.pack(padx=5, pady=20, side=tk.LEFT)
 
-                user_list = tk.Text(self.frame_movie_grid)
-                user_list.pack(padx=5, pady=40, side=tk.LEFT)
+                user_list = tk.Text(self.frame_movie_grid, width=30, background=COLOR_BLACK, foreground=COLOR_GREY, font=FONT_VISITOR_OVERVIEW)
+                user_list.pack(padx=5, pady=20, side=tk.LEFT)
 
                 for user in users:
                     user_obj = User.selectBy(id=user.user_id)
@@ -396,7 +400,7 @@ class ScreenConfirmationSupplier:
                                     height=5,
                                     font=FONT_SIZE_DEFAULT)
 
-        self.back = BackButton(self.frame_confirmation, command=self.show_screen_intro)
+        self.back = BackButton(self.frame_confirmation, command=self.show_screen_start_supplier)
 
         timestamp = get_timestamp()
 
@@ -415,10 +419,10 @@ class ScreenConfirmationSupplier:
         self.label_movie.pack()
         self.back.pack(side=tk.BOTTOM)
 
-    def show_screen_intro(self):
+    def show_screen_start_supplier(self):
         """functie voor de terug knop naar het intro scherm van suppliers"""
         self.frame_confirmation.pack_forget()
-        ScreenIntro(self.master)
+        ScreenStartSupplier(self.master, self.supplier)
 
 
 class ScreenSignInVisitor:
@@ -586,18 +590,20 @@ class ScreenPublic:
                 frame_item = tk.Frame(self.frame_movie_overview, background=COLOR_RED)
 
                 # labels can be text or images
-                label_movie = tk.Label(frame_item, text=movie[0].ft_title)
+                label_text_movie = "De film %s" % (movie[0].ft_title)
+                label_movie = tk.Label(frame_item, text=label_text_movie, background=COLOR_RED, foreground=COLOR_WHITE, font=FONT_OVERVIEW)
                 label_movie.pack(padx=5, pady=20, side=tk.LEFT)
 
                 # labels can be text or images
-                label_user_number_text = "%s bezoeker(s) aangeboden door %s" % (
+                label_user_number_text = "wordt bezocht door %s bezoeker(s) en de film wordt aangeboden door %s." % (
                 str(number_of_users), supplier[0].username)
-                label_user_number = tk.Label(frame_item, text=label_user_number_text)
-                label_user_number.pack(padx=5, pady=20, side=tk.LEFT)
+                label_user_number = tk.Label(frame_item, text=label_user_number_text, background=COLOR_RED, foreground=COLOR_WHITE, font=FONT_OVERVIEW)
+                label_user_number.pack(pady=20, side=tk.LEFT)
 
                 frame_item.pack()
 
-        self.total_visitors_label = tk.Label(self.frame_movie_overview, text=total_visitors, background=COLOR_RED, font=FONT_SIZE_DEFAULT)
+        self.total_visitors_label = tk.Label(self.frame_movie_overview, text="Totaal aantal bezoekers: " + str(total_visitors), background=COLOR_RED, foreground=COLOR_WHITE,
+                                             font=FONT_OVERVIEW)
         self.total_visitors_label.pack()
 
         self.frame_public.pack(fill="both", expand=True)
