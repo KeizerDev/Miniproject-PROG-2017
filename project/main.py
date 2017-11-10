@@ -468,7 +468,7 @@ class ScreenTicketVisitor:
         self.broadcast_supplier_id = broadcast_supplier_id
 
         self.frame_ticket_visitor = tk.Frame(self.master, background=COLOR_RED)
-        self.frame_ticket=tk.Frame(self.frame_ticket_visitor, background=COLOR_BLACK)
+        self.frame_ticket=tk.Frame(self.frame_ticket_visitor, background=COLOR_BLACK, borderwidth=30)
         self.label_text = tk.Label(self.frame_ticket_visitor,
                                     text="Hieronder ziet u uw ticket:",
                                     foreground=COLOR_WHITE,
@@ -497,7 +497,7 @@ class ScreenTicketVisitor:
 
         self.label_text.pack()
         self.frame_ticket_visitor.pack(fill="both", expand=True)
-        self.frame_ticket.pack()
+        self.frame_ticket.pack(pady=10)
         self.label_supplier.pack()
         self.label_code.pack()
         self.back.pack(side=tk.BOTTOM)
