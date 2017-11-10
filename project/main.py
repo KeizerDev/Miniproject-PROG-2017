@@ -17,7 +17,7 @@ from thuisbioscoop.helpers import generate_unique_code, text_to_md5, get_timesta
 from thuisbioscoop.api.ft_handler import FtHandler
 from thuisbioscoop.ui.back_button import BackButton
 from thuisbioscoop.ui.ui_config import COLOR_RED, FONT_SIZE_DEFAULT, COLOR_WHITE, COLOR_BLACK, COLOR_GREY, FONT_BUTTON, \
-    FONT_LOGIN, FONT_OVERVIEW, FONT_VISITOR_OVERVIEW
+    FONT_LOGIN, FONT_OVERVIEW, FONT_VISITOR_OVERVIEW, FONT_ERROR
 
 
 class ScreenIntro:
@@ -481,7 +481,7 @@ class ScreenSignInVisitor:
         email = self.email.get()
 
         if not validate_email(email):
-            self.label_error.configure(text="Username of het e-mailadres is foutief")
+            self.label_error.configure(text="Username of het e-mailadres is foutief", font=FONT_ERROR)
             return
 
         if not User.selectBy(emailAddress=email).count():
