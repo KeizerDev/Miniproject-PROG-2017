@@ -14,7 +14,7 @@ class Movie(sqlobject.SQLObject):
     ft_country = sqlobject.StringCol()
     ft_cover_img = sqlobject.StringCol()
     ft_tagline = sqlobject.StringCol()
-    ft_length = sqlobject.IntCol()
+    ft_length = sqlobject.StringCol()
     ft_synopsis = sqlobject.StringCol()
     ft_rating = sqlobject.FloatCol()
     ft_votes = sqlobject.IntCol()

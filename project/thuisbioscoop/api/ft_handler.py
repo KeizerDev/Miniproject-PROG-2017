@@ -34,7 +34,7 @@ class FtHandler:
                               ft_country=movie["land"],
                               ft_cover_img=movie["cover"],
                               ft_tagline=movie["tagline"],
-                              ft_length=int(movie["duur"]),
+                              ft_length=movie["duur"],
                               ft_synopsis=movie["synopsis"],
                               ft_rating=float(movie["ft_rating"]),
                               ft_votes=int(movie["ft_votes"]),
