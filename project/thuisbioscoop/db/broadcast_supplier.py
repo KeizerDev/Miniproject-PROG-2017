@@ -3,7 +3,7 @@ from .connection import conn
 
 
 class BroadcastSupplier(sqlobject.SQLObject):
-	"""Class voor het databaseobject broadcast_supplier"""
+    """Class voor het databaseobject broadcast_supplier"""
     _connection = conn
     _connection.debug = True
     broadcast_time_id = sqlobject.IntCol(unique=True)
