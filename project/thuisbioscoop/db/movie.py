@@ -5,7 +5,6 @@ from .connection import conn
 class Movie(sqlobject.SQLObject):
     """Class voor het databaseobject movie"""
     _connection = conn
-    # _connection.debug = True
     ft_link = sqlobject.StringCol()
     ft_title = sqlobject.StringCol()
     ft_year = sqlobject.StringCol()
