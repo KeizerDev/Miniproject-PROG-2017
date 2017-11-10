@@ -224,7 +224,11 @@ class ScreenOverviewVisitors:
         )
 
         for broadcast_time in broadcast_times:
-            broadcast_supplier = BroadcastSupplier.selectBy(broadcast_time_id=broadcast_time.id)
+            broadcast_supplier = BroadcastSupplier.select(
+                AND(
+                    BroadcastSupplier.q.broadcast_time_id == broadcast_time.id,
+                    BroadcastSupplier.q.supplier_id == self.supplier.id,
+                ))
             movie = Movie.selectBy(imdb_id=broadcast_time.imdb_id)
             if broadcast_supplier.count():
                 users = UserBroadcastSupplier.selectBy(broadcast_supplier_id=broadcast_supplier[0].id)
@@ -581,12 +585,12 @@ class ScreenPublic:
                 frame_item = tk.Frame(self.frame_movie_overview, background=COLOR_RED)
 
                 # labels can be text or images
-                label_user_number_text = "%s bezoeker(s) aangeboden door %s" % (str(number_of_users), supplier[0].username)
-                label_user_number = tk.Label(frame_item, text=label_user_number_text)
-                label_user_number.pack(padx=5, pady=20, side=tk.LEFT)
+                label_movie = tk.Label(frame_item, text=label_user_number_text)
+                label_movie.pack(padx=5, pady=20, side=tk.LEFT)
 
                 # labels can be text or images
-                label_user_number_text = "%s bezoeker(s) aangeboden door %s" % (str(number_of_users), supplier[0].username)
+                label_user_number_text = "%s bezoeker(s) aangeboden door %s" % (
+                str(number_of_users), supplier[0].username)
                 label_user_number = tk.Label(frame_item, text=label_user_number_text)
                 label_user_number.pack(padx=5, pady=20, side=tk.LEFT)
 
